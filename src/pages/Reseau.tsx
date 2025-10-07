@@ -62,21 +62,21 @@ const Reseau = () => {
                     </p>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                     <Card className="border-2 border-primary/20">
-                      <CardContent className="p-4 text-center">
-                        <Mail className="h-8 w-8 mx-auto mb-2 text-primary" />
-                        <h4 className="font-semibold text-sm mb-1">Email</h4>
-                        <a href="mailto:mmdiagne@ept.sn" className="text-xs text-secondary hover:underline">
+                      <CardContent className="p-3 md:p-4 text-center">
+                        <Mail className="h-6 md:h-8 w-6 md:w-8 mx-auto mb-1.5 md:mb-2 text-primary" />
+                        <h4 className="font-semibold text-xs md:text-sm mb-1">Email</h4>
+                        <a href="mailto:mmdiagne@ept.sn" className="text-xs text-secondary hover:underline break-all">
                           mmdiagne@ept.sn
                         </a>
                       </CardContent>
                     </Card>
 
                     <Card className="border-2 border-primary/20">
-                      <CardContent className="p-4 text-center">
-                        <MessageCircle className="h-8 w-8 mx-auto mb-2 text-primary" />
-                        <h4 className="font-semibold text-sm mb-1">WhatsApp</h4>
+                      <CardContent className="p-3 md:p-4 text-center">
+                        <MessageCircle className="h-6 md:h-8 w-6 md:w-8 mx-auto mb-1.5 md:mb-2 text-primary" />
+                        <h4 className="font-semibold text-xs md:text-sm mb-1">WhatsApp</h4>
                         <a 
                           href="https://wa.me/221771234567" 
                           target="_blank" 
@@ -141,14 +141,14 @@ const Reseau = () => {
       
       <main className="pt-16">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16">
+        <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-8 md:py-16">
           <div className="section-container">
             <div className="max-w-3xl mx-auto text-center animate-fade-in">
-              <Users className="h-16 w-16 mx-auto mb-4 text-secondary" />
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <Users className="h-12 md:h-16 w-12 md:w-16 mx-auto mb-3 md:mb-4 text-secondary" />
+              <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4">
                 Rejoindre le Réseau
               </h1>
-              <p className="text-lg md:text-xl opacity-90">
+              <p className="text-base md:text-xl opacity-90">
                 Connectez-vous avec les acteurs du Made in Senegal
               </p>
             </div>
@@ -156,47 +156,47 @@ const Reseau = () => {
         </section>
 
         {/* Why Join Section */}
-        <section className="section-container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Pourquoi rejoindre SunuMarket ?</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+        <section className="section-container py-6 md:py-8">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Pourquoi rejoindre SunuMarket ?</h2>
+            <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto px-4">
               Intégrez un écosystème dynamique qui valorise l'excellence locale
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 mb-12 md:mb-16">
             <Card className="border-2 border-secondary/20 hover:border-secondary/40 transition-all duration-300 hover:shadow-xl hover:shadow-secondary/10">
-              <CardContent className="p-6 text-center">
-                <div className="h-14 w-14 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="h-7 w-7 text-secondary" />
+              <CardContent className="p-4 md:p-6 text-center">
+                <div className="h-12 md:h-14 w-12 md:w-14 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <TrendingUp className="h-6 md:h-7 w-6 md:w-7 text-secondary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Visibilité accrue</h3>
-                <p className="text-muted-foreground">
-                  Exposez vos produits à un large public national et international via notre marketplace digitale
+                <h3 className="text-base md:text-xl font-semibold mb-2 md:mb-3">Visibilité accrue</h3>
+                <p className="text-xs md:text-base text-muted-foreground">
+                  Exposez vos produits à un large public via notre marketplace
                 </p>
               </CardContent>
             </Card>
 
             <Card className="border-2 border-secondary/20 hover:border-secondary/40 transition-all duration-300 hover:shadow-xl hover:shadow-secondary/10">
-              <CardContent className="p-6 text-center">
-                <div className="h-14 w-14 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4">
-                  <Award className="h-7 w-7 text-secondary" />
+              <CardContent className="p-4 md:p-6 text-center">
+                <div className="h-12 md:h-14 w-12 md:w-14 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <Award className="h-6 md:h-7 w-6 md:w-7 text-secondary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Certification</h3>
-                <p className="text-muted-foreground">
-                  Obtenez la certification SunuMark et gagnez la confiance des consommateurs
+                <h3 className="text-base md:text-xl font-semibold mb-2 md:mb-3">Certification</h3>
+                <p className="text-xs md:text-base text-muted-foreground">
+                  Obtenez la certification SunuMark et gagnez la confiance
                 </p>
               </CardContent>
             </Card>
 
             <Card className="border-2 border-secondary/20 hover:border-secondary/40 transition-all duration-300 hover:shadow-xl hover:shadow-secondary/10">
-              <CardContent className="p-6 text-center">
-                <div className="h-14 w-14 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4">
-                  <Handshake className="h-7 w-7 text-secondary" />
+              <CardContent className="p-4 md:p-6 text-center">
+                <div className="h-12 md:h-14 w-12 md:w-14 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <Handshake className="h-6 md:h-7 w-6 md:w-7 text-secondary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Opportunités d'affaires</h3>
-                <p className="text-muted-foreground">
-                  Accédez à un réseau de partenaires, distributeurs et opportunités de collaboration
+                <h3 className="text-base md:text-xl font-semibold mb-2 md:mb-3">Opportunités</h3>
+                <p className="text-xs md:text-base text-muted-foreground">
+                  Accédez à un réseau de partenaires et opportunités de collaboration
                 </p>
               </CardContent>
             </Card>

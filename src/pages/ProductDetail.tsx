@@ -25,15 +25,15 @@ const ProductDetail = () => {
       <Header />
       
       <main className="pt-16">
-        <div className="section-container">
+        <div className="section-container py-6 md:py-8">
           <Link to="/marketplace">
-            <Button variant="ghost" className="mb-6">
+            <Button variant="ghost" className="mb-4 md:mb-6">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Retour à la marketplace
+              Retour
             </Button>
           </Link>
 
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 animate-fade-in">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 animate-fade-in">
             {/* Image */}
             <div className="space-y-4">
               <div className="relative overflow-hidden rounded-lg border-2 border-secondary/20">
@@ -53,19 +53,20 @@ const ProductDetail = () => {
               {/* QR Code */}
               {product.certified && (
                 <Card className="border-2 border-secondary/20">
-                  <CardContent className="p-6 flex items-center gap-4">
+                  <CardContent className="p-4 md:p-6 flex flex-col sm:flex-row items-center gap-3 md:gap-4">
                     <div className="flex-shrink-0">
                       <QRCodeSVG
                         value={`https://sunumarket.sn/verify/${product.id}`}
-                        size={100}
+                        size={80}
                         level="H"
                         includeMargin
+                        className="md:w-[100px] md:h-[100px]"
                       />
                     </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">QR Code SunuMark</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Scannez pour vérifier l'authenticité du produit
+                    <div className="text-center sm:text-left">
+                      <h3 className="font-semibold text-sm md:text-base mb-1">QR Code SunuMark</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground">
+                        Scannez pour vérifier l'authenticité
                       </p>
                     </div>
                   </CardContent>
@@ -74,10 +75,10 @@ const ProductDetail = () => {
             </div>
 
             {/* Details */}
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">{product.name}</h1>
-                <p className="text-2xl md:text-3xl font-bold text-secondary mb-4">
+                <h1 className="text-2xl md:text-4xl font-bold mb-2">{product.name}</h1>
+                <p className="text-xl md:text-3xl font-bold text-secondary mb-3 md:mb-4">
                   {product.price.toLocaleString()} FCFA
                 </p>
               </div>
@@ -106,15 +107,15 @@ const ProductDetail = () => {
               </Card>
 
               <div>
-                <h2 className="text-xl font-semibold mb-3">Description</h2>
-                <p className="text-muted-foreground leading-relaxed">
+                <h2 className="text-lg md:text-xl font-semibold mb-2 md:mb-3">Description</h2>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                   {product.description}
                 </p>
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold mb-3">Origine</h2>
-                <p className="text-muted-foreground leading-relaxed">
+                <h2 className="text-lg md:text-xl font-semibold mb-2 md:mb-3">Origine</h2>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                   {product.origin}
                 </p>
               </div>
@@ -134,9 +135,9 @@ const ProductDetail = () => {
           </div>
 
           {/* Related Products */}
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold mb-6">Produits similaires</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="mt-12 md:mt-16">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Produits similaires</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {products
                 .filter((p) => p.category === product.category && p.id !== product.id)
                 .slice(0, 4)

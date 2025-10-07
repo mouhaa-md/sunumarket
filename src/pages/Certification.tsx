@@ -69,21 +69,22 @@ const Certification = () => {
                     </p>
                   </div>
 
-                  <div className="bg-muted/30 p-6 rounded-lg">
-                    <h3 className="font-semibold text-center mb-4">Votre QR Code SunuMark</h3>
-                    <div className="flex justify-center mb-4">
+                  <div className="bg-muted/30 p-4 md:p-6 rounded-lg">
+                    <h3 className="text-sm md:text-base font-semibold text-center mb-3 md:mb-4">Votre QR Code SunuMark</h3>
+                    <div className="flex justify-center mb-3 md:mb-4">
                       <QRCodeSVG
                         value={`https://sunumarket.sn/verify/${qrCode}`}
-                        size={200}
+                        size={160}
                         level="H"
                         includeMargin
+                        className="md:w-[200px] md:h-[200px]"
                       />
                     </div>
-                    <p className="text-sm text-center text-muted-foreground">
-                      Code de référence : <span className="font-mono font-bold">{qrCode}</span>
+                    <p className="text-xs md:text-sm text-center text-muted-foreground break-all">
+                      Code : <span className="font-mono font-bold">{qrCode}</span>
                     </p>
                     <p className="text-xs text-center text-muted-foreground mt-2">
-                      Ce code sera activé après validation de votre dossier
+                      Activé après validation
                     </p>
                   </div>
 
@@ -139,15 +140,15 @@ const Certification = () => {
       
       <main className="pt-16">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16">
+        <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-8 md:py-16">
           <div className="section-container">
             <div className="max-w-3xl mx-auto text-center animate-fade-in">
-              <ShieldCheck className="h-16 w-16 mx-auto mb-4 text-secondary" />
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <ShieldCheck className="h-12 md:h-16 w-12 md:w-16 mx-auto mb-3 md:mb-4 text-secondary" />
+              <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4">
                 Certification SunuMark
               </h1>
-              <p className="text-lg md:text-xl opacity-90">
-                Certifiez vos produits et gagnez la confiance des consommateurs
+              <p className="text-base md:text-xl opacity-90">
+                Certifiez vos produits et gagnez la confiance
               </p>
             </div>
           </div>

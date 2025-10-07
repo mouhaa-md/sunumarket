@@ -30,13 +30,13 @@ const Marketplace = () => {
       
       <main className="pt-16">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16">
+        <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-8 md:py-16">
           <div className="section-container">
             <div className="max-w-3xl mx-auto text-center animate-fade-in">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <h1 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4">
                 Marketplace SunuMarket
               </h1>
-              <p className="text-lg md:text-xl opacity-90">
+              <p className="text-base md:text-xl opacity-90">
                 Découvrez l'excellence du Made in Senegal
               </p>
             </div>
@@ -45,13 +45,13 @@ const Marketplace = () => {
 
         {/* Filters Section */}
         <section className="bg-card border-b border-border sticky top-16 z-40">
-          <div className="section-container py-6">
-            <div className="space-y-4">
+          <div className="section-container py-4 md:py-6">
+            <div className="space-y-3 md:space-y-4">
               {/* Search */}
-              <div className="relative max-w-md">
+              <div className="relative w-full md:max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
-                  placeholder="Rechercher un produit ou producteur..."
+                  placeholder="Rechercher..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -60,14 +60,15 @@ const Marketplace = () => {
 
               {/* Category Filter */}
               <div>
-                <h3 className="text-sm font-medium mb-2">Catégories</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 className="text-xs md:text-sm font-medium mb-1.5 md:mb-2">Catégories</h3>
+                <div className="flex flex-wrap gap-1.5 md:gap-2">
                   {categories.map((category) => (
                     <Button
                       key={category}
                       variant={selectedCategory === category ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSelectedCategory(category)}
+                      className="text-xs h-8"
                     >
                       {category}
                     </Button>
@@ -77,14 +78,15 @@ const Marketplace = () => {
 
               {/* Region Filter */}
               <div>
-                <h3 className="text-sm font-medium mb-2">Régions</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 className="text-xs md:text-sm font-medium mb-1.5 md:mb-2">Régions</h3>
+                <div className="flex flex-wrap gap-1.5 md:gap-2">
                   {regions.map((region) => (
                     <Button
                       key={region}
                       variant={selectedRegion === region ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSelectedRegion(region)}
+                      className="text-xs h-8"
                     >
                       {region}
                     </Button>
