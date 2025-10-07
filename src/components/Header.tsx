@@ -1,11 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   const scrollToSection = (id: string) => {
+    if (!isHomePage) {
+      window.location.href = `/#${id}`;
+      return;
+    }
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: "smooth" });
     setMobileMenuOpen(false);
@@ -16,26 +23,28 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold gradient-text">SunuMarket</h1>
+            <Link to="/">
+              <h1 className="text-2xl font-bold gradient-text cursor-pointer">SunuMarket</h1>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <button onClick={() => scrollToSection("problem")} className="text-sm font-medium hover:text-secondary transition-colors">
-              Le Problème
-            </button>
-            <button onClick={() => scrollToSection("solution")} className="text-sm font-medium hover:text-secondary transition-colors">
-              Solutions
-            </button>
-            <button onClick={() => scrollToSection("value")} className="text-sm font-medium hover:text-secondary transition-colors">
-              Proposition
-            </button>
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="text-sm font-medium hover:text-secondary transition-colors">
+              Accueil
+            </Link>
+            <Link to="/marketplace" className="text-sm font-medium hover:text-secondary transition-colors">
+              Marketplace
+            </Link>
+            <Link to="/certification" className="text-sm font-medium hover:text-secondary transition-colors">
+              Certification
+            </Link>
+            <Link to="/reseau" className="text-sm font-medium hover:text-secondary transition-colors">
+              Réseau
+            </Link>
             <button onClick={() => scrollToSection("team")} className="text-sm font-medium hover:text-secondary transition-colors">
-              Équipe
+              Contact
             </button>
-            <Button variant="default" size="sm" className="bg-primary hover:bg-primary/90">
-              Rejoindre
-            </Button>
           </nav>
 
           {/* Mobile menu button */}
@@ -47,21 +56,21 @@ const Header = () => {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <nav className="md:hidden py-4 space-y-3 border-t border-border">
-            <button onClick={() => scrollToSection("problem")} className="block w-full text-left text-sm font-medium hover:text-secondary py-2">
-              Le Problème
-            </button>
-            <button onClick={() => scrollToSection("solution")} className="block w-full text-left text-sm font-medium hover:text-secondary py-2">
-              Solutions
-            </button>
-            <button onClick={() => scrollToSection("value")} className="block w-full text-left text-sm font-medium hover:text-secondary py-2">
-              Proposition
-            </button>
+            <Link to="/" onClick={() => setMobileMenuOpen(false)} className="block w-full text-left text-sm font-medium hover:text-secondary py-2">
+              Accueil
+            </Link>
+            <Link to="/marketplace" onClick={() => setMobileMenuOpen(false)} className="block w-full text-left text-sm font-medium hover:text-secondary py-2">
+              Marketplace
+            </Link>
+            <Link to="/certification" onClick={() => setMobileMenuOpen(false)} className="block w-full text-left text-sm font-medium hover:text-secondary py-2">
+              Certification
+            </Link>
+            <Link to="/reseau" onClick={() => setMobileMenuOpen(false)} className="block w-full text-left text-sm font-medium hover:text-secondary py-2">
+              Réseau
+            </Link>
             <button onClick={() => scrollToSection("team")} className="block w-full text-left text-sm font-medium hover:text-secondary py-2">
-              Équipe
+              Contact
             </button>
-            <Button variant="default" size="sm" className="w-full bg-primary hover:bg-primary/90">
-              Rejoindre
-            </Button>
           </nav>
         )}
       </div>

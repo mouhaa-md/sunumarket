@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShoppingBag, Award, Users } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import heroSenegal from "@/assets/hero-senegal.jpg";
 import heroFashion from "@/assets/hero-fashion.jpg";
 import heroLeather from "@/assets/hero-leather.jpg";
@@ -53,18 +54,24 @@ const HeroSection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground hover:scale-105 transition-transform duration-300">
-              <ShoppingBag className="mr-2 h-5 w-5" />
-              Découvrir la marketplace
-            </Button>
-            <Button size="lg" variant="outline" className="bg-primary-foreground/5 border-primary-foreground/30 text-primary-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary hover:scale-110 hover:shadow-2xl hover:shadow-secondary/50 transition-all duration-500 backdrop-blur-sm">
-              <Award className="mr-2 h-5 w-5" />
-              Certifier mes produits
-            </Button>
-            <Button size="lg" variant="outline" className="bg-primary-foreground/5 border-primary-foreground/30 text-primary-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary hover:scale-110 hover:shadow-2xl hover:shadow-secondary/50 transition-all duration-500 backdrop-blur-sm">
-              <Users className="mr-2 h-5 w-5" />
-              Rejoindre le réseau
-            </Button>
+            <Link to="/marketplace">
+              <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground hover:scale-105 transition-transform duration-300">
+                <ShoppingBag className="mr-2 h-5 w-5" />
+                Découvrir la marketplace
+              </Button>
+            </Link>
+            <Link to="/certification">
+              <Button size="lg" variant="outline" className="bg-primary-foreground/5 border-primary-foreground/30 text-primary-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary hover:scale-110 hover:shadow-2xl hover:shadow-secondary/50 transition-all duration-500 backdrop-blur-sm">
+                <Award className="mr-2 h-5 w-5" />
+                Certifier mes produits
+              </Button>
+            </Link>
+            <Link to="/reseau">
+              <Button size="lg" variant="outline" className="bg-primary-foreground/5 border-primary-foreground/30 text-primary-foreground hover:bg-secondary hover:text-secondary-foreground hover:border-secondary hover:scale-110 hover:shadow-2xl hover:shadow-secondary/50 transition-all duration-500 backdrop-blur-sm">
+                <Users className="mr-2 h-5 w-5" />
+                Rejoindre le réseau
+              </Button>
+            </Link>
           </div>
 
           {/* Values Pills */}
