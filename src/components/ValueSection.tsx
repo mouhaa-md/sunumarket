@@ -72,7 +72,7 @@ const ValueSection = () => {
               <div className={`${prop.bgColor} w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                 <Icon className={`h-8 w-8 ${prop.color} group-hover:scale-110 transition-transform duration-300`} />
               </div>
-              <h3 className="text-2xl font-bold mb-6 group-hover:gradient-text transition-all duration-300">{prop.title}</h3>
+              <h3 className="text-xl md:text-2xl font-bold mb-6 group-hover:gradient-text transition-all duration-300 break-words">{prop.title}</h3>
               <ul className="space-y-3">
                 {prop.benefits.map((benefit, idx) => (
                   <li key={idx} className="flex items-start gap-3 group/item hover:translate-x-1 transition-transform duration-200">
