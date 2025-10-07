@@ -26,12 +26,22 @@ const HeroSection = () => {
           className={`absolute inset-0 z-0 transition-opacity duration-1000 ${
             index === currentImage ? 'opacity-100' : 'opacity-0'
           }`}
-          style={{
-            backgroundImage: `linear-gradient(135deg, rgba(27, 67, 50, 0.9), rgba(27, 67, 50, 0.7)), url(${image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+        >
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center 40%',
+            }}
+          />
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(135deg, rgba(27, 67, 50, 0.9), rgba(27, 67, 50, 0.7))',
+            }}
+          />
+        </div>
       ))}
       
       {/* Content */}
