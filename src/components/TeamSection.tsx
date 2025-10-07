@@ -4,23 +4,23 @@ import { Linkedin, Mail } from "lucide-react";
 const team = [
   {
     name: "Mouhamadoul Moustapha DIAGNE",
-    role: "Co-fondateur",
-    specialization: "Génie Informatique",
+    role: "CEO - Co-fondateur",
+    specialization: "Génie Informatique et Télécoms",
   },
   {
     name: "Ibrahima POUYE",
-    role: "Co-fondateur",
-    specialization: "Génie Télécoms",
+    role: "CTO - Co-fondateur",
+    specialization: "Génie Informatique et Télécoms",
   },
   {
     name: "Gnatam GAYE",
-    role: "Co-fondateur",
-    specialization: "Génie Informatique",
+    role: "COO - Co-fondateur",
+    specialization: "Génie Informatique et Télécoms",
   },
   {
     name: "Serigne Fallou NGOM",
-    role: "Co-fondateur",
-    specialization: "Génie Informatique",
+    role: "CSO - Co-fondateur",
+    specialization: "Génie Informatique et Télécoms",
   },
 ];
 

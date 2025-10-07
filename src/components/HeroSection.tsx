@@ -34,16 +34,16 @@ const HeroSection = () => {
             SunuMarket est la première plateforme numérique dédiée au Made in Senegal, reliant producteurs, artisans, PME et consommateurs autour de la confiance, de la traçabilité et de l'innovation.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 group">
             <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground">
               <ShoppingBag className="mr-2 h-5 w-5" />
               Découvrir la marketplace
             </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+            <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <Award className="mr-2 h-5 w-5" />
               Certifier mes produits
             </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+            <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <Users className="mr-2 h-5 w-5" />
               Rejoindre le réseau
             </Button>
