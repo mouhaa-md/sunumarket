@@ -57,8 +57,8 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-primary-foreground/80">
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <a href="mailto:contact@sunumarket.sn" className="hover:text-secondary transition-colors">
-                  contact@sunumarket.sn
+                <a href="mailto:mmdiagne@ept.sn" className="hover:text-secondary transition-colors">
+                  mmdiagne@ept.sn
                 </a>
               </li>
               <li>École Polytechnique de Thiès</li>
