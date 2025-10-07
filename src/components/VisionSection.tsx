@@ -47,7 +47,7 @@ const VisionSection = () => {
             return (
               <div 
                 key={index} 
-                className="bg-primary-foreground/10 backdrop-blur-md border border-primary-foreground/20 rounded-xl p-6 text-center animate-slide-in-right hover:bg-primary-foreground/20 hover:scale-110 transition-all duration-500 group/card cursor-default"
+                className="bg-primary-foreground/10 backdrop-blur-md border-2 border-secondary/30 hover:border-secondary/50 rounded-xl p-6 text-center animate-slide-in-right hover:bg-primary-foreground/20 hover:scale-110 transition-all duration-500 group/card cursor-default"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <Icon className="h-10 w-10 text-secondary mx-auto mb-3 group-hover/card:scale-125 group-hover/card:rotate-12 transition-all duration-300" />
@@ -59,7 +59,7 @@ const VisionSection = () => {
         </div>
 
         {/* Quote */}
-        <div className="bg-primary-foreground/10 backdrop-blur-md border border-primary-foreground/20 rounded-xl p-8 mb-12 animate-fade-in">
+        <div className="bg-primary-foreground/10 backdrop-blur-md border-2 border-secondary/40 rounded-xl p-8 mb-12 animate-fade-in">
           <blockquote className="text-center">
             <p className="text-2xl md:text-3xl font-bold text-primary-foreground mb-4 italic">
               "Le futur du Made in Senegal s'écrit aujourd'hui"

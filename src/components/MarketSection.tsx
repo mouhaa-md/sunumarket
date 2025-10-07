@@ -40,7 +40,7 @@ const MarketSection = () => {
             return (
               <Card 
                 key={index} 
-                className="p-8 text-center hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-110 border-border bg-card/80 backdrop-blur-sm animate-fade-in group"
+                className="p-8 text-center hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-110 border-2 border-secondary/20 hover:border-secondary/40 bg-card/80 backdrop-blur-sm animate-fade-in group"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <Icon className="h-12 w-12 text-secondary mx-auto mb-4 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
@@ -61,7 +61,7 @@ const MarketSection = () => {
             return (
               <Card 
                 key={index} 
-                className="p-6 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border-border bg-card/80 backdrop-blur-sm animate-slide-in-right group"
+                className="p-6 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 bg-card/80 backdrop-blur-sm animate-slide-in-right group"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-300">
@@ -76,7 +76,7 @@ const MarketSection = () => {
       </div>
 
       {/* Market Potential */}
-      <div className="mt-12 p-8 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl border border-border">
+      <div className="mt-12 p-8 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl border-2 border-primary/30">
         <div className="flex items-center justify-center gap-3 mb-4">
           <TrendingUp className="h-8 w-8 text-primary" />
           <h3 className="text-2xl font-bold">Potentiel de Marché</h3>

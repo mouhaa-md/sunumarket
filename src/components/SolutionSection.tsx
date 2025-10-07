@@ -51,7 +51,7 @@ const SolutionSection = () => {
         {pillars.map((pillar, index) => (
           <Card 
             key={index} 
-            className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-105 border-border bg-card/80 backdrop-blur-sm animate-fade-in group"
+            className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-105 border-2 border-primary/20 hover:border-secondary/40 bg-card/80 backdrop-blur-sm animate-fade-in group"
             style={{ animationDelay: `${index * 0.2}s` }}
           >
             <div className="aspect-square overflow-hidden bg-muted/50 relative">

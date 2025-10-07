@@ -66,7 +66,11 @@ const ValueSection = () => {
           return (
             <Card 
               key={index} 
-              className="p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-105 border-border bg-card/80 backdrop-blur-sm animate-slide-in-right group overflow-visible"
+              className={`p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-105 border-2 ${
+                index === 0 ? 'border-secondary/20 hover:border-secondary/40' :
+                index === 1 ? 'border-primary/20 hover:border-primary/40' :
+                'border-accent/20 hover:border-accent/40'
+              } bg-card/80 backdrop-blur-sm animate-slide-in-right group overflow-visible`}
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               <div className={`${prop.bgColor} w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>

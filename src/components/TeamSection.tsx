@@ -48,7 +48,7 @@ const TeamSection = () => {
         {team.map((member, index) => (
           <Card 
             key={index} 
-            className="p-6 text-center hover:shadow-xl transition-all hover:-translate-y-2 border-border bg-card animate-fade-in"
+            className="p-6 text-center hover:shadow-xl transition-all hover:-translate-y-2 border-2 border-secondary/20 hover:border-secondary/40 bg-card animate-fade-in"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             {/* Avatar Placeholder */}
@@ -78,7 +78,7 @@ const TeamSection = () => {
       </div>
 
       <div className="mt-12 text-center">
-        <Card className="inline-block p-6 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
+        <Card className="inline-block p-6 border-2 border-primary/30 bg-gradient-to-r from-primary/5 to-secondary/5">
           <p className="text-foreground font-medium">
             "Nous sommes convaincus que le Sénégal peut devenir un hub industriel et numérique africain. 
             SunuMarket est notre contribution à la Vision 2050."

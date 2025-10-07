@@ -47,7 +47,7 @@ const ProblemSection = () => {
           return (
             <Card 
               key={index} 
-              className="p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 hover:scale-105 border-border bg-card/80 backdrop-blur-sm animate-slide-in-right group"
+              className="p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 hover:scale-105 border-2 border-destructive/20 hover:border-destructive/40 bg-card/80 backdrop-blur-sm animate-slide-in-right group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="bg-destructive/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:bg-destructive/20 transition-colors duration-300">
@@ -60,7 +60,7 @@ const ProblemSection = () => {
         })}
       </div>
 
-      <div className="mt-12 p-6 bg-card rounded-lg border border-border text-center">
+      <div className="mt-12 p-6 bg-card rounded-lg border-2 border-destructive/30 text-center">
         <p className="text-lg font-medium text-foreground">
           <span className="gradient-text font-bold">75%</span> des PME sénégalaises n'ont pas de présence en ligne efficace
         </p>

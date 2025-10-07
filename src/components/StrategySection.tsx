@@ -91,7 +91,7 @@ const StrategySection = () => {
                 </div>
 
                 {/* Content Card */}
-                <Card className={`w-full lg:w-5/12 ${isEven ? 'lg:mr-auto lg:pr-12' : 'lg:ml-auto lg:pl-12'} p-6 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border-border bg-card/80 backdrop-blur-sm group`}>
+                <Card className={`w-full lg:w-5/12 ${isEven ? 'lg:mr-auto lg:pr-12' : 'lg:ml-auto lg:pl-12'} p-6 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border-2 border-primary/20 hover:border-secondary/40 bg-card/80 backdrop-blur-sm group`}>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="lg:hidden bg-secondary/10 w-12 h-12 rounded-lg flex items-center justify-center group-hover:bg-secondary/20 transition-colors duration-300">
                       <Icon className="h-6 w-6 text-secondary group-hover:scale-110 transition-transform duration-300" />
