@@ -26,7 +26,10 @@ const problems = [
 
 const ProblemSection = () => {
   return (
-    <section id="problem" className="section-container bg-muted/30">
+    <section id="problem" className="section-container relative overflow-hidden">
+      {/* Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-destructive/5 via-background to-muted/20 -z-10" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(27,67,50,0.1),transparent_50%)] -z-10" />
       <div className="text-center mb-16 animate-fade-in">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Le Problème
@@ -42,13 +45,13 @@ const ProblemSection = () => {
           return (
             <Card 
               key={index} 
-              className="p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border bg-card animate-slide-in-right"
+              className="p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 hover:scale-105 border-border bg-card/80 backdrop-blur-sm animate-slide-in-right group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="bg-destructive/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                <Icon className="h-6 w-6 text-destructive" />
+              <div className="bg-destructive/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:bg-destructive/20 transition-colors duration-300">
+                <Icon className="h-6 w-6 text-destructive group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">{problem.title}</h3>
+              <h3 className="text-lg font-semibold mb-2 group-hover:text-destructive transition-colors duration-300">{problem.title}</h3>
               <p className="text-sm text-muted-foreground">{problem.description}</p>
             </Card>
           );

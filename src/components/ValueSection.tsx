@@ -45,7 +45,10 @@ const valueProps = [
 
 const ValueSection = () => {
   return (
-    <section id="value" className="section-container bg-muted/30">
+    <section id="value" className="section-container relative overflow-hidden">
+      {/* Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-bl from-secondary/5 via-background to-primary/5 -z-10" />
+      <div className="absolute top-1/2 left-1/4 w-72 h-72 bg-secondary/10 rounded-full blur-3xl -z-10" />
       <div className="text-center mb-16 animate-fade-in">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Proposition de Valeur
@@ -61,18 +64,18 @@ const ValueSection = () => {
           return (
             <Card 
               key={index} 
-              className="p-8 hover:shadow-xl transition-all duration-300 border-border bg-card animate-slide-in-right"
+              className="p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-105 border-border bg-card/80 backdrop-blur-sm animate-slide-in-right group"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
-              <div className={`${prop.bgColor} w-16 h-16 rounded-xl flex items-center justify-center mb-6`}>
-                <Icon className={`h-8 w-8 ${prop.color}`} />
+              <div className={`${prop.bgColor} w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                <Icon className={`h-8 w-8 ${prop.color} group-hover:scale-110 transition-transform duration-300`} />
               </div>
-              <h3 className="text-2xl font-bold mb-6">{prop.title}</h3>
+              <h3 className="text-2xl font-bold mb-6 group-hover:gradient-text transition-all duration-300">{prop.title}</h3>
               <ul className="space-y-3">
                 {prop.benefits.map((benefit, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-muted-foreground">{benefit}</span>
+                  <li key={idx} className="flex items-start gap-3 group/item hover:translate-x-1 transition-transform duration-200">
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5 group-hover/item:scale-110 transition-transform duration-200" />
+                    <span className="text-sm text-muted-foreground group-hover/item:text-foreground transition-colors duration-200">{benefit}</span>
                   </li>
                 ))}
               </ul>

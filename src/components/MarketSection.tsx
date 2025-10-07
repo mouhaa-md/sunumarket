@@ -16,7 +16,10 @@ const revenues = [
 
 const MarketSection = () => {
   return (
-    <section className="section-container">
+    <section className="section-container relative overflow-hidden">
+      {/* Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-accent/5 via-background to-primary/5 -z-10" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -z-10" />
       <div className="text-center mb-16 animate-fade-in">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Le Marché & Le Modèle Économique
@@ -35,12 +38,12 @@ const MarketSection = () => {
             return (
               <Card 
                 key={index} 
-                className="p-8 text-center hover:shadow-lg transition-all border-border bg-card animate-fade-in"
+                className="p-8 text-center hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-110 border-border bg-card/80 backdrop-blur-sm animate-fade-in group"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <Icon className="h-12 w-12 text-secondary mx-auto mb-4" />
-                <div className="text-4xl font-bold gradient-text mb-2">{segment.value}</div>
-                <p className="text-muted-foreground">{segment.label}</p>
+                <Icon className="h-12 w-12 text-secondary mx-auto mb-4 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
+                <div className="text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform duration-300">{segment.value}</div>
+                <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">{segment.label}</p>
               </Card>
             );
           })}
@@ -56,14 +59,14 @@ const MarketSection = () => {
             return (
               <Card 
                 key={index} 
-                className="p-6 hover:shadow-lg transition-all hover:-translate-y-1 border-border bg-card animate-slide-in-right"
+                className="p-6 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border-border bg-card/80 backdrop-blur-sm animate-slide-in-right group"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Icon className="h-6 w-6 text-primary" />
+                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-300">
+                  <Icon className="h-6 w-6 text-primary group-hover:scale-125 transition-transform duration-300" />
                 </div>
-                <h4 className="font-semibold mb-2">{revenue.title}</h4>
-                <p className="text-sm text-muted-foreground">{revenue.description}</p>
+                <h4 className="font-semibold mb-2 group-hover:text-primary transition-colors duration-300">{revenue.title}</h4>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">{revenue.description}</p>
               </Card>
             );
           })}

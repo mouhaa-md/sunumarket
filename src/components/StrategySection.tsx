@@ -54,7 +54,10 @@ const phases = [
 
 const StrategySection = () => {
   return (
-    <section className="section-container bg-muted/30">
+    <section className="section-container relative overflow-hidden">
+      {/* Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-muted/20 to-secondary/5 -z-10" />
+      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10" />
       <div className="text-center mb-16 animate-fade-in">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Stratégie & Opportunités
@@ -86,22 +89,22 @@ const StrategySection = () => {
                 </div>
 
                 {/* Content Card */}
-                <Card className={`w-full lg:w-5/12 ${isEven ? 'lg:mr-auto lg:pr-12' : 'lg:ml-auto lg:pl-12'} p-6 hover:shadow-xl transition-all border-border bg-card`}>
+                <Card className={`w-full lg:w-5/12 ${isEven ? 'lg:mr-auto lg:pr-12' : 'lg:ml-auto lg:pl-12'} p-6 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 border-border bg-card/80 backdrop-blur-sm group`}>
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="lg:hidden bg-secondary/10 w-12 h-12 rounded-lg flex items-center justify-center">
-                      <Icon className="h-6 w-6 text-secondary" />
+                    <div className="lg:hidden bg-secondary/10 w-12 h-12 rounded-lg flex items-center justify-center group-hover:bg-secondary/20 transition-colors duration-300">
+                      <Icon className="h-6 w-6 text-secondary group-hover:scale-110 transition-transform duration-300" />
                     </div>
                     <div>
-                      <span className="text-sm font-semibold text-secondary">{phase.phase}</span>
-                      <h3 className="text-xl font-bold">{phase.title}</h3>
-                      <p className="text-sm text-muted-foreground">{phase.period}</p>
+                      <span className="text-sm font-semibold text-secondary group-hover:text-secondary/80 transition-colors duration-300">{phase.phase}</span>
+                      <h3 className="text-xl font-bold group-hover:gradient-text transition-all duration-300">{phase.title}</h3>
+                      <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">{phase.period}</p>
                     </div>
                   </div>
                   <ul className="space-y-2">
                     {phase.actions.map((action, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                        <span className="text-sm">{action}</span>
+                      <li key={idx} className="flex items-start gap-2 hover:translate-x-1 transition-transform duration-200 group/item">
+                        <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5 group-hover/item:scale-110 transition-transform duration-200" />
+                        <span className="text-sm group-hover/item:text-primary transition-colors duration-200">{action}</span>
                       </li>
                     ))}
                   </ul>

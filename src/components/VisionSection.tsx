@@ -10,7 +10,7 @@ const impacts = [
 
 const VisionSection = () => {
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden group/section">
       {/* Background with Image */}
       <div 
         className="absolute inset-0 z-0"
@@ -46,12 +46,12 @@ const VisionSection = () => {
             return (
               <div 
                 key={index} 
-                className="bg-primary-foreground/10 backdrop-blur-md border border-primary-foreground/20 rounded-xl p-6 text-center animate-slide-in-right"
+                className="bg-primary-foreground/10 backdrop-blur-md border border-primary-foreground/20 rounded-xl p-6 text-center animate-slide-in-right hover:bg-primary-foreground/20 hover:scale-110 transition-all duration-500 group/card cursor-default"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <Icon className="h-10 w-10 text-secondary mx-auto mb-3" />
-                <div className="text-3xl font-bold text-primary-foreground mb-2">{impact.value}</div>
-                <p className="text-primary-foreground/80">{impact.label}</p>
+                <Icon className="h-10 w-10 text-secondary mx-auto mb-3 group-hover/card:scale-125 group-hover/card:rotate-12 transition-all duration-300" />
+                <div className="text-3xl font-bold text-primary-foreground mb-2 group-hover/card:scale-110 transition-transform duration-300">{impact.value}</div>
+                <p className="text-primary-foreground/80 group-hover/card:text-primary-foreground transition-colors duration-300">{impact.label}</p>
               </div>
             );
           })}
@@ -73,12 +73,12 @@ const VisionSection = () => {
         <div className="text-center">
           <Button 
             size="lg" 
-            className="bg-secondary hover:bg-secondary/90 text-secondary-foreground text-lg px-8 py-6 shadow-xl"
+            className="bg-secondary hover:bg-secondary/90 text-secondary-foreground text-lg px-8 py-6 shadow-xl hover:scale-110 hover:shadow-2xl transition-all duration-300"
           >
             <Sparkles className="mr-2 h-5 w-5" />
             Rejoindre le Mouvement
           </Button>
-          <p className="mt-4 text-primary-foreground/70">
+          <p className="mt-4 text-primary-foreground/70 hover:text-primary-foreground transition-colors duration-300">
             Ensemble, construisons le Sénégal de demain
           </p>
         </div>

@@ -12,7 +12,7 @@ const pillars = [
     features: ["Catalogue unifié", "Paiement sécurisé", "Livraison intégrée"],
   },
   {
-    title: "Chaîne d'Approvisionnement",
+    title: "Chaîne Logistique",
     subtitle: "SunuChain",
     description: "Une logistique connectée entre producteurs, transformateurs et distributeurs. Optimisation des flux et transparence.",
     image: supplyChainIcon,
@@ -29,7 +29,11 @@ const pillars = [
 
 const SolutionSection = () => {
   return (
-    <section id="solution" className="section-container">
+    <section id="solution" className="section-container relative overflow-hidden">
+      {/* Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-background to-secondary/10 -z-10" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl -z-10" />
       <div className="text-center mb-16 animate-fade-in">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Notre Solution
@@ -46,31 +50,32 @@ const SolutionSection = () => {
         {pillars.map((pillar, index) => (
           <Card 
             key={index} 
-            className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-border bg-card animate-fade-in"
+            className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-105 border-border bg-card/80 backdrop-blur-sm animate-fade-in group"
             style={{ animationDelay: `${index * 0.2}s` }}
           >
-            <div className="aspect-square overflow-hidden bg-muted/50">
+            <div className="aspect-square overflow-hidden bg-muted/50 relative">
               <img 
                 src={pillar.image} 
                 alt={pillar.title}
-                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
             <div className="p-6">
               <div className="mb-4">
-                <span className="text-xs font-semibold text-secondary uppercase tracking-wider">
+                <span className="text-xs font-semibold text-secondary uppercase tracking-wider group-hover:text-secondary/80 transition-colors duration-300">
                   {pillar.subtitle}
                 </span>
-                <h3 className="text-2xl font-bold mt-1">{pillar.title}</h3>
+                <h3 className="text-2xl font-bold mt-1 group-hover:gradient-text transition-all duration-300">{pillar.title}</h3>
               </div>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-muted-foreground mb-4 group-hover:text-foreground transition-colors duration-300">
                 {pillar.description}
               </p>
               <div className="flex flex-wrap gap-2">
                 {pillar.features.map((feature, idx) => (
                   <span 
                     key={idx}
-                    className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium"
+                    className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-300 cursor-default"
                   >
                     {feature}
                   </span>
