@@ -61,17 +61,17 @@ const SolutionSection = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
-            <div className="p-6 flex flex-col h-full">
+            <div className="p-6">
               <div className="mb-4">
                 <span className="text-xs font-semibold text-secondary uppercase tracking-wider group-hover:text-secondary/80 transition-colors duration-300">
                   {pillar.subtitle}
                 </span>
                 <h3 className="text-2xl font-bold mt-1 group-hover:gradient-text transition-all duration-300">{pillar.title}</h3>
               </div>
-              <p className="text-muted-foreground mb-4 min-h-[3rem] group-hover:text-foreground transition-colors duration-300">
+              <p className="text-muted-foreground mb-4 group-hover:text-foreground transition-colors duration-300">
                 {pillar.description}
               </p>
-              <div className="flex flex-wrap gap-2 mt-auto">
+              <div className="flex flex-wrap gap-2">
                 {pillar.features.map((feature, idx) => (
                   <span 
                     key={idx}
