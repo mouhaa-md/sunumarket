@@ -57,11 +57,11 @@ const HeroSection = () => {
               <ShoppingBag className="mr-2 h-5 w-5" />
               Découvrir la marketplace
             </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:scale-105 transition-all duration-300">
+            <Button size="lg" variant="outline" className="bg-primary-foreground/5 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/15 hover:scale-105 transition-all duration-300 backdrop-blur-sm">
               <Award className="mr-2 h-5 w-5" />
               Certifier mes produits
             </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:scale-105 transition-all duration-300">
+            <Button size="lg" variant="outline" className="bg-primary-foreground/5 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/15 hover:scale-105 transition-all duration-300 backdrop-blur-sm">
               <Users className="mr-2 h-5 w-5" />
               Rejoindre le réseau
             </Button>
