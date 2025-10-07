@@ -7,21 +7,21 @@ const pillars = [
   {
     title: "Marketplace Nationale",
     subtitle: "SunuMarket Platform",
-    description: "Une plateforme web et mobile regroupant l'ensemble du Made in Senegal. Chaque producteur dispose de sa vitrine digitale.",
+    description: "Une plateforme web et mobile regroupant l'ensemble du Made in Senegal. Vitrines digitales pour chaque producteur et artisan.",
     image: marketplaceIcon,
     features: ["Catalogue unifié", "Paiement sécurisé", "Livraison intégrée"],
   },
   {
     title: "Chaîne Logistique",
     subtitle: "SunuChain",
-    description: "Une logistique connectée entre producteurs, transformateurs et distributeurs. Optimisation des flux et transparence.",
+    description: "Une logistique connectée entre producteurs, transformateurs et distributeurs. Optimisation des flux et transparence totale.",
     image: supplyChainIcon,
     features: ["Suivi en temps réel", "Gestion des stocks", "Optimisation routes"],
   },
   {
     title: "Label Numérique",
     subtitle: "SunuMark",
-    description: "Un QR code pour certifier l'origine, la qualité et la traçabilité de chaque produit Made in Senegal.",
+    description: "Un QR code pour certifier l'origine, la qualité et la traçabilité de chaque produit. Garantie Made in Senegal authentique.",
     image: certificationIcon,
     features: ["QR code unique", "Traçabilité complète", "Certification officielle"],
   },
@@ -61,17 +61,17 @@ const SolutionSection = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
-            <div className="p-6">
+            <div className="p-6 flex flex-col h-full">
               <div className="mb-4">
                 <span className="text-xs font-semibold text-secondary uppercase tracking-wider group-hover:text-secondary/80 transition-colors duration-300">
                   {pillar.subtitle}
                 </span>
                 <h3 className="text-2xl font-bold mt-1 group-hover:gradient-text transition-all duration-300">{pillar.title}</h3>
               </div>
-              <p className="text-muted-foreground mb-4 group-hover:text-foreground transition-colors duration-300">
+              <p className="text-muted-foreground mb-4 min-h-[3rem] group-hover:text-foreground transition-colors duration-300">
                 {pillar.description}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mt-auto">
                 {pillar.features.map((feature, idx) => (
                   <span 
                     key={idx}
