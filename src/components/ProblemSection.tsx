@@ -27,9 +27,11 @@ const problems = [
 const ProblemSection = () => {
   return (
     <section id="problem" className="section-container relative overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-destructive/5 via-background to-muted/20 -z-10" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(27,67,50,0.1),transparent_50%)] -z-10" />
+      {/* Enhanced Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-destructive/10 via-background to-muted/30 -z-10" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(239,68,68,0.15),transparent_50%)] -z-10" />
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-destructive/10 rounded-full blur-3xl animate-pulse -z-10" />
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-muted/20 rounded-full blur-3xl -z-10" />
       <div className="text-center mb-16 animate-fade-in">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Le Problème

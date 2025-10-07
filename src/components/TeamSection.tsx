@@ -26,7 +26,12 @@ const team = [
 
 const TeamSection = () => {
   return (
-    <section id="team" className="section-container">
+    <section id="team" className="section-container relative overflow-hidden">
+      {/* Enhanced Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 via-background to-primary/10 -z-10" />
+      <div className="absolute top-1/3 left-1/3 w-[450px] h-[450px] bg-secondary/12 rounded-full blur-3xl animate-pulse -z-10" style={{ animationDuration: '7s' }} />
+      <div className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] bg-primary/10 rounded-full blur-3xl animate-pulse -z-10" style={{ animationDuration: '9s' }} />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,rgba(212,175,55,0.1),transparent_60%)] -z-10" />
       <div className="text-center mb-16 animate-fade-in">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           L'Équipe

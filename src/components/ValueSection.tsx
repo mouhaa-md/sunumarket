@@ -46,9 +46,11 @@ const valueProps = [
 const ValueSection = () => {
   return (
     <section id="value" className="section-container relative overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-bl from-secondary/5 via-background to-primary/5 -z-10" />
-      <div className="absolute top-1/2 left-1/4 w-72 h-72 bg-secondary/10 rounded-full blur-3xl -z-10" />
+      {/* Enhanced Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-bl from-secondary/10 via-background to-primary/10 -z-10" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/15 rounded-full blur-3xl animate-pulse -z-10" style={{ animationDuration: '5s' }} />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse -z-10" style={{ animationDuration: '7s' }} />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(212,175,55,0.08),transparent_50%)] -z-10" />
       <div className="text-center mb-16 animate-fade-in">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Proposition de Valeur

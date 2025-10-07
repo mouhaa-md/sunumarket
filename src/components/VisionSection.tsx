@@ -11,15 +11,16 @@ const impacts = [
 const VisionSection = () => {
   return (
     <section className="relative overflow-hidden group/section">
-      {/* Background with Image */}
+      {/* Enhanced Background with Image and animated overlay */}
       <div 
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `linear-gradient(135deg, rgba(27, 67, 50, 0.85), rgba(139, 69, 19, 0.85)), url(${visionImage})`,
+          backgroundImage: `linear-gradient(135deg, rgba(27, 67, 50, 0.88), rgba(139, 69, 19, 0.88)), url(${visionImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.15),transparent_70%)] z-0 animate-pulse" style={{ animationDuration: '4s' }} />
 
       <div className="section-container relative z-10">
         <div className="text-center mb-12 animate-fade-in">

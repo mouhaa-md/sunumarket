@@ -17,9 +17,11 @@ const revenues = [
 const MarketSection = () => {
   return (
     <section className="section-container relative overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-accent/5 via-background to-primary/5 -z-10" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -z-10" />
+      {/* Enhanced Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 via-background to-primary/10 -z-10" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent/15 rounded-full blur-3xl animate-pulse -z-10" style={{ animationDuration: '8s' }} />
+      <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-3xl -z-10" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,rgba(27,67,50,0.08),transparent_50%)] -z-10" />
       <div className="text-center mb-16 animate-fade-in">
         <h2 className="text-3xl md:text-5xl font-bold mb-6">
           Le Marché & Le Modèle Économique
