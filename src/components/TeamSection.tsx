@@ -49,7 +49,9 @@ const TeamSection = () => {
             {/* Avatar Placeholder */}
             <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center">
               <span className="text-3xl font-bold text-primary-foreground">
-                {member.name.split(' ').map(n => n[0]).slice(0, 2).join('')}
+                {member.name === "Mouhamadoul Moustapha DIAGNE" 
+                  ? "MD" 
+                  : member.name.split(' ').map(n => n[0]).slice(0, 2).join('')}
               </span>
             </div>
             
