@@ -60,19 +60,19 @@ const ValueSection = () => {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-3 gap-8 px-4">
         {valueProps.map((prop, index) => {
           const Icon = prop.icon;
           return (
             <Card 
               key={index} 
-              className="p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-border bg-card/80 backdrop-blur-sm animate-slide-in-right group"
+              className="p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 hover:scale-105 border-border bg-card/80 backdrop-blur-sm animate-slide-in-right group overflow-visible"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               <div className={`${prop.bgColor} w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                 <Icon className={`h-8 w-8 ${prop.color} group-hover:scale-110 transition-transform duration-300`} />
               </div>
-              <h3 className="text-2xl font-bold mb-6 transition-colors duration-300">{prop.title}</h3>
+              <h3 className="text-2xl font-bold mb-6 group-hover:gradient-text transition-all duration-300">{prop.title}</h3>
               <ul className="space-y-3">
                 {prop.benefits.map((benefit, idx) => (
                   <li key={idx} className="flex items-start gap-3 group/item hover:translate-x-1 transition-transform duration-200">
