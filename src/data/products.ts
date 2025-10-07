@@ -1,3 +1,16 @@
+import panierOsier from "@/assets/product-panier-osier.jpg";
+import huileArachide from "@/assets/product-huile-arachide.jpg";
+import boubouBazin from "@/assets/product-boubou-bazin.jpg";
+import savonKarite from "@/assets/product-savon-karite.jpg";
+import bissap from "@/assets/product-bissap.jpg";
+import djembe from "@/assets/product-djembe.jpg";
+import sacCuir from "@/assets/product-sac-cuir.jpg";
+import confitureMangue from "@/assets/product-confiture-mangue.jpg";
+import collierPerles from "@/assets/product-collier-perles.jpg";
+import miel from "@/assets/product-miel.jpg";
+import echarpeNdopp from "@/assets/product-echarpe-ndopp.jpg";
+import ceramique from "@/assets/product-ceramique.jpg";
+
 export interface Product {
   id: string;
   name: string;
@@ -19,7 +32,7 @@ export const products: Product[] = [
     category: "Artisanat",
     region: "Thiès",
     producer: "Coopérative Artisanale de Thiès",
-    image: "https://images.unsplash.com/photo-1519974719765-e6559eac2575?w=500&h=500&fit=crop",
+    image: panierOsier,
     certified: true,
     description: "Panier artisanal tissé à la main par des artisans de Thiès. Parfait pour vos courses ou comme décoration.",
     origin: "Fabriqué à Thiès avec des matériaux locaux"
@@ -31,7 +44,7 @@ export const products: Product[] = [
     category: "Agroalimentaire",
     region: "Kaolack",
     producer: "Les Huileries du Saloum",
-    image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&h=500&fit=crop",
+    image: huileArachide,
     certified: true,
     description: "Huile d'arachide 100% naturelle, pressée à froid. Idéale pour la cuisine sénégalaise authentique.",
     origin: "Arachides cultivées et transformées à Kaolack"
@@ -43,7 +56,7 @@ export const products: Product[] = [
     category: "Textile",
     region: "Dakar",
     producer: "Atelier Ndoye Fashion",
-    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&h=500&fit=crop",
+    image: boubouBazin,
     certified: true,
     description: "Boubou en bazin riche avec broderie artisanale. Élégance et tradition sénégalaise.",
     origin: "Confectionné à Dakar par des couturiers experts"
@@ -55,7 +68,7 @@ export const products: Product[] = [
     category: "Cosmétique",
     region: "Kédougou",
     producer: "Karité d'Or",
-    image: "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=500&h=500&fit=crop",
+    image: savonKarite,
     certified: true,
     description: "Savon naturel enrichi au beurre de karité. Hydratant et apaisant pour la peau.",
     origin: "Beurre de karité de Kédougou, transformation locale"
@@ -67,7 +80,7 @@ export const products: Product[] = [
     category: "Agroalimentaire",
     region: "Casamance",
     producer: "Coopérative Bissap Casamance",
-    image: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=500&h=500&fit=crop",
+    image: bissap,
     certified: false,
     description: "Fleurs d'hibiscus séchées pour préparer le jus de bissap traditionnel. Riche en vitamine C.",
     origin: "Cultivé en Casamance sans pesticides"
@@ -79,7 +92,7 @@ export const products: Product[] = [
     category: "Artisanat",
     region: "Ziguinchor",
     producer: "Les Tambours de Casamance",
-    image: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=500&h=500&fit=crop",
+    image: djembe,
     certified: true,
     description: "Djembé authentique sculpté dans du bois massif avec peau de chèvre naturelle.",
     origin: "Fabriqué artisanalement à Ziguinchor"
@@ -91,7 +104,7 @@ export const products: Product[] = [
     category: "Maroquinerie",
     region: "Saint-Louis",
     producer: "Cuirs du Fleuve",
-    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500&h=500&fit=crop",
+    image: sacCuir,
     certified: true,
     description: "Sac à main élégant en cuir véritable, tannage traditionnel et finitions modernes.",
     origin: "Cuir tanné et travaillé à Saint-Louis"
@@ -103,7 +116,7 @@ export const products: Product[] = [
     category: "Agroalimentaire",
     region: "Fatick",
     producer: "Délices du Sine",
-    image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=500&h=500&fit=crop",
+    image: confitureMangue,
     certified: false,
     description: "Confiture artisanale de mangues du Sénégal. Sans conservateurs ni colorants.",
     origin: "Mangues de Fatick, transformation locale"
@@ -115,7 +128,7 @@ export const products: Product[] = [
     category: "Bijouterie",
     region: "Dakar",
     producer: "Bijoux d'Afrique",
-    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&h=500&fit=crop",
+    image: collierPerles,
     certified: true,
     description: "Collier unique fait de perles traditionnelles africaines. Pièce artisanale authentique.",
     origin: "Perles collectées et assemblées à Dakar"
@@ -127,7 +140,7 @@ export const products: Product[] = [
     category: "Agroalimentaire",
     region: "Tambacounda",
     producer: "Ruches du Ferlo",
-    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500&h=500&fit=crop",
+    image: miel,
     certified: true,
     description: "Miel pur récolté dans les zones sauvages du Ferlo. Goût unique et authentique.",
     origin: "Récolté à Tambacounda dans les zones naturelles"
@@ -139,7 +152,7 @@ export const products: Product[] = [
     category: "Textile",
     region: "Diourbel",
     producer: "Tissage Touba",
-    image: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=500&h=500&fit=crop",
+    image: echarpeNdopp,
     certified: false,
     description: "Écharpe tissée dans le style Ndopp traditionnel. Motifs géométriques colorés.",
     origin: "Tissé à la main à Diourbel"
@@ -151,7 +164,7 @@ export const products: Product[] = [
     category: "Artisanat",
     region: "Thiès",
     producer: "Poterie Sénégalaise",
-    image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=500&h=500&fit=crop",
+    image: ceramique,
     certified: true,
     description: "Vase en céramique avec motifs traditionnels sénégalais. Pièce décorative unique.",
     origin: "Modelé et cuit à Thiès"

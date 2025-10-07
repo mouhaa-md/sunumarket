@@ -44,7 +44,7 @@ const Marketplace = () => {
         </section>
 
         {/* Filters Section */}
-        <section className="bg-card border-b border-border sticky top-16 z-40">
+        <section className="bg-card border-b border-border">
           <div className="section-container py-4 md:py-6">
             <div className="space-y-3 md:space-y-4">
               {/* Search */}
@@ -98,8 +98,8 @@ const Marketplace = () => {
         </section>
 
         {/* Products Grid */}
-        <section className="section-container">
-          <div className="mb-6">
+        <section className="section-container py-6 md:py-8">
+          <div className="mb-4 md:mb-6">
             <p className="text-muted-foreground">
               {filteredProducts.length} produit{filteredProducts.length > 1 ? "s" : ""} trouvé{filteredProducts.length > 1 ? "s" : ""}
             </p>
