@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Sparkles, Target, Globe, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
 import visionImage from "@/assets/vision-2050.jpg";
 
 const impacts = [
@@ -72,13 +73,15 @@ const VisionSection = () => {
 
         {/* CTA */}
         <div className="text-center">
-          <Button 
-            size="lg" 
-            className="bg-secondary hover:bg-secondary/90 text-secondary-foreground text-lg px-8 py-6 shadow-xl hover:scale-110 hover:shadow-2xl transition-all duration-300"
-          >
-            <Sparkles className="mr-2 h-5 w-5" />
-            Rejoindre le Mouvement
-          </Button>
+          <Link to="/reseau">
+            <Button 
+              size="lg" 
+              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground text-lg px-8 py-6 shadow-xl hover:scale-110 hover:shadow-2xl transition-all duration-300"
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Rejoindre le Mouvement
+            </Button>
+          </Link>
           <p className="mt-4 text-primary-foreground/70 hover:text-primary-foreground transition-colors duration-300">
             Ensemble, construisons le Sénégal de demain
           </p>
