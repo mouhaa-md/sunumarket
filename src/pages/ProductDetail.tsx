@@ -7,18 +7,28 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShieldCheck, MapPin, User, ArrowLeft, Package } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
-import { useState } from "react";
-import PaymentModal from "@/components/PaymentModal";
 import NotFound from "./NotFound";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const product = products.find((p) => p.id === id);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   if (!product) {
     return <NotFound />;
   }
+
+  const handleWhatsAppOrder = () => {
+    const message = `Bonjour, je souhaite commander le produit suivant :\n\n` +
+      `📦 Produit : ${product.name}\n` +
+      `💰 Prix : ${product.price.toLocaleString()} FCFA\n` +
+      `👨‍🌾 Producteur : ${product.producer}\n` +
+      `📍 Région : ${product.region}\n` +
+      `🏷️ Catégorie : ${product.category}\n\n` +
+      `Merci de me contacter pour finaliser ma commande.`;
+    
+    const whatsappUrl = `https://wa.me/221769481773?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   return (
     <div className="min-h-screen">
@@ -123,13 +133,13 @@ const ProductDetail = () => {
               <Button
                 size="lg"
                 className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground"
-                onClick={() => setIsPaymentModalOpen(true)}
+                onClick={handleWhatsAppOrder}
               >
-                Acheter maintenant
+                Commander via WhatsApp
               </Button>
 
               <p className="text-xs text-center text-muted-foreground">
-                Paiement sécurisé via Wave ou Orange Money
+                Vous serez redirigé vers WhatsApp pour finaliser votre commande
               </p>
             </div>
           </div>
@@ -162,13 +172,6 @@ const ProductDetail = () => {
       </main>
 
       <Footer />
-
-      <PaymentModal
-        isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
-        productName={product.name}
-        amount={product.price}
-      />
     </div>
   );
 };
