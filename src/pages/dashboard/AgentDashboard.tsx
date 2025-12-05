@@ -60,8 +60,11 @@ const AgentDashboard = () => {
   const [allOrders, setAllOrders] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState("accueil");
   const [selectedSeller, setSelectedSeller] = useState<any>(null);
+  const [selectedCertification, setSelectedCertification] = useState<any>(null);
   const [rejectionReason, setRejectionReason] = useState("");
+  const [certRejectionReason, setCertRejectionReason] = useState("");
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [isCertRejectDialogOpen, setIsCertRejectDialogOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -96,10 +99,10 @@ const AgentDashboard = () => {
     
     if (allSellersData) setAllSellers(allSellersData);
 
-    // Fetch pending certifications
+    // Fetch pending certifications with seller info
     const { data: certData } = await supabase
       .from("certifications")
-      .select("*")
+      .select("*, seller_details!inner(business_name, user_id, region), profiles!inner(full_name, email)")
       .eq("status", "en_attente");
     
     if (certData) setPendingCertifications(certData);
@@ -174,6 +177,97 @@ const AgentDashboard = () => {
     setIsRejectDialogOpen(false);
     setSelectedSeller(null);
     setRejectionReason("");
+    fetchData();
+  };
+
+  const handleApproveCertification = async (certification: any) => {
+    const sellerId = certification.seller_id;
+    const sellerUserId = certification.seller_details?.user_id;
+
+    // 1. Update certification status
+    const { error: certError } = await supabase
+      .from("certifications")
+      .update({
+        status: "approuvee",
+        reviewed_by: user?.id,
+        review_date: new Date().toISOString(),
+      } as any)
+      .eq("id", certification.id);
+
+    if (certError) {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'approuver la certification",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // 2. Update seller to certified
+    await supabase
+      .from("seller_details")
+      .update({ is_certified: true } as any)
+      .eq("id", sellerId);
+
+    // 3. Update all seller's products to certified
+    if (sellerUserId) {
+      await supabase
+        .from("products")
+        .update({ is_certified: true } as any)
+        .eq("seller_id", sellerUserId);
+    }
+
+    // 4. Update member card certification status
+    if (sellerUserId) {
+      await supabase
+        .from("member_cards")
+        .update({ certification_status: "certifie" } as any)
+        .eq("user_id", sellerUserId);
+    }
+
+    toast({
+      title: "Certification approuvée !",
+      description: "Le vendeur et tous ses produits sont maintenant certifiés SunuMark",
+    });
+    fetchData();
+  };
+
+  const handleRejectCertification = async () => {
+    if (!selectedCertification || !certRejectionReason) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez indiquer le motif du refus",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { error } = await supabase
+      .from("certifications")
+      .update({
+        status: "rejetee",
+        reviewed_by: user?.id,
+        review_date: new Date().toISOString(),
+        rejection_reason: certRejectionReason,
+      } as any)
+      .eq("id", selectedCertification.id);
+
+    if (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de rejeter la certification",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Certification refusée",
+      description: "Le vendeur a été notifié du refus",
+    });
+    setIsCertRejectDialogOpen(false);
+    setSelectedCertification(null);
+    setCertRejectionReason("");
     fetchData();
   };
 
@@ -426,6 +520,9 @@ const AgentDashboard = () => {
                     <CardTitle className="flex items-center gap-2">
                       <Award className="h-5 w-5 text-secondary" />
                       Demandes de certification SunuMark
+                      {pendingCertifications.length > 0 && (
+                        <Badge className="ml-2">{pendingCertifications.length} en attente</Badge>
+                      )}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -438,19 +535,49 @@ const AgentDashboard = () => {
                         {pendingCertifications.map((cert) => (
                           <div
                             key={cert.id}
-                            className="p-4 border rounded-lg flex justify-between items-center"
+                            className="p-4 border rounded-lg space-y-3"
                           >
-                            <div>
-                              <p className="font-medium">Certification #{cert.id.slice(0, 8)}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {new Date(cert.created_at).toLocaleDateString("fr-FR")}
-                              </p>
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-bold text-lg">
+                                  {(cert as any).seller_details?.business_name || "Entreprise"}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {(cert as any).profiles?.full_name} • {(cert as any).profiles?.email}
+                                </p>
+                              </div>
+                              <Badge variant="outline" className="border-yellow-500 text-yellow-600">
+                                En attente
+                              </Badge>
                             </div>
-                            <div className="flex gap-2">
-                              <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                                Approuver
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div>
+                                <span className="text-muted-foreground">Région:</span>{" "}
+                                {getRegionLabel((cert as any).seller_details?.region)}
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground">Date demande:</span>{" "}
+                                {new Date(cert.created_at).toLocaleDateString("fr-FR")}
+                              </div>
+                            </div>
+                            <div className="flex gap-2 pt-2 border-t">
+                              <Button 
+                                size="sm" 
+                                className="bg-green-600 hover:bg-green-700"
+                                onClick={() => handleApproveCertification(cert)}
+                              >
+                                <CheckCircle className="h-4 w-4 mr-1" />
+                                Approuver et certifier
                               </Button>
-                              <Button size="sm" variant="destructive">
+                              <Button 
+                                size="sm" 
+                                variant="destructive"
+                                onClick={() => {
+                                  setSelectedCertification(cert);
+                                  setIsCertRejectDialogOpen(true);
+                                }}
+                              >
+                                <XCircle className="h-4 w-4 mr-1" />
                                 Refuser
                               </Button>
                             </div>
@@ -605,6 +732,38 @@ const AgentDashboard = () => {
                 Annuler
               </Button>
               <Button variant="destructive" onClick={handleRejectSeller}>
+                Confirmer le refus
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Certification Reject Dialog */}
+      <Dialog open={isCertRejectDialogOpen} onOpenChange={setIsCertRejectDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Motif du refus de certification</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Entreprise: {(selectedCertification as any)?.seller_details?.business_name}
+            </p>
+            <Textarea
+              placeholder="Indiquez le motif du refus de certification..."
+              value={certRejectionReason}
+              onChange={(e) => setCertRejectionReason(e.target.value)}
+              rows={4}
+            />
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => {
+                setIsCertRejectDialogOpen(false);
+                setSelectedCertification(null);
+                setCertRejectionReason("");
+              }}>
+                Annuler
+              </Button>
+              <Button variant="destructive" onClick={handleRejectCertification}>
                 Confirmer le refus
               </Button>
             </div>
