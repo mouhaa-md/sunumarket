@@ -14,16 +14,410 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agent_details: {
+        Row: {
+          assigned_region: Database["public"]["Enums"]["senegal_region"] | null
+          created_at: string
+          direction: string
+          id: string
+          matricule: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_region?: Database["public"]["Enums"]["senegal_region"] | null
+          created_at?: string
+          direction: string
+          id?: string
+          matricule: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_region?: Database["public"]["Enums"]["senegal_region"] | null
+          created_at?: string
+          direction?: string
+          id?: string
+          matricule?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      buyer_details: {
+        Row: {
+          city: string | null
+          created_at: string
+          delivery_address: string | null
+          id: string
+          product_preferences: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          delivery_address?: string | null
+          id?: string
+          product_preferences?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          delivery_address?: string | null
+          id?: string
+          product_preferences?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      certifications: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string | null
+          qr_code: string | null
+          rejection_reason: string | null
+          review_date: string | null
+          reviewed_by: string | null
+          seller_id: string
+          status: Database["public"]["Enums"]["certification_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          qr_code?: string | null
+          rejection_reason?: string | null
+          review_date?: string | null
+          reviewed_by?: string | null
+          seller_id: string
+          status?: Database["public"]["Enums"]["certification_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          qr_code?: string | null
+          rejection_reason?: string | null
+          review_date?: string | null
+          reviewed_by?: string | null
+          seller_id?: string
+          status?: Database["public"]["Enums"]["certification_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certifications_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          delivery_address: string | null
+          delivery_city: string | null
+          id: string
+          payment_method: string | null
+          product_id: string
+          quantity: number
+          seller_id: string
+          status: Database["public"]["Enums"]["order_status"]
+          total_amount: number
+          tracking_code: string | null
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          delivery_address?: string | null
+          delivery_city?: string | null
+          id?: string
+          payment_method?: string | null
+          product_id: string
+          quantity?: number
+          seller_id: string
+          status?: Database["public"]["Enums"]["order_status"]
+          total_amount: number
+          tracking_code?: string | null
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          delivery_address?: string | null
+          delivery_city?: string | null
+          id?: string
+          payment_method?: string | null
+          product_id?: string
+          quantity?: number
+          seller_id?: string
+          status?: Database["public"]["Enums"]["order_status"]
+          total_amount?: number
+          tracking_code?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string
+          certification_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          images: string[] | null
+          is_active: boolean | null
+          is_certified: boolean | null
+          name: string
+          origin_region: Database["public"]["Enums"]["senegal_region"] | null
+          price: number
+          qr_code: string | null
+          seller_id: string
+          stock: number | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          certification_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          images?: string[] | null
+          is_active?: boolean | null
+          is_certified?: boolean | null
+          name: string
+          origin_region?: Database["public"]["Enums"]["senegal_region"] | null
+          price: number
+          qr_code?: string | null
+          seller_id: string
+          stock?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          certification_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          images?: string[] | null
+          is_active?: boolean | null
+          is_certified?: boolean | null
+          name?: string
+          origin_region?: Database["public"]["Enums"]["senegal_region"] | null
+          price?: number
+          qr_code?: string | null
+          seller_id?: string
+          stock?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          phone: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      seller_details: {
+        Row: {
+          activity_sector: Database["public"]["Enums"]["activity_sector"]
+          business_name: string
+          business_type: Database["public"]["Enums"]["business_type"]
+          created_at: string
+          id: string
+          is_certified: boolean | null
+          ninea: string | null
+          photos: string[] | null
+          region: Database["public"]["Enums"]["senegal_region"]
+          rejection_reason: string | null
+          updated_at: string
+          user_id: string
+          validated_by: string | null
+          validation_date: string | null
+          validation_status: Database["public"]["Enums"]["seller_status"]
+        }
+        Insert: {
+          activity_sector: Database["public"]["Enums"]["activity_sector"]
+          business_name: string
+          business_type: Database["public"]["Enums"]["business_type"]
+          created_at?: string
+          id?: string
+          is_certified?: boolean | null
+          ninea?: string | null
+          photos?: string[] | null
+          region: Database["public"]["Enums"]["senegal_region"]
+          rejection_reason?: string | null
+          updated_at?: string
+          user_id: string
+          validated_by?: string | null
+          validation_date?: string | null
+          validation_status?: Database["public"]["Enums"]["seller_status"]
+        }
+        Update: {
+          activity_sector?: Database["public"]["Enums"]["activity_sector"]
+          business_name?: string
+          business_type?: Database["public"]["Enums"]["business_type"]
+          created_at?: string
+          id?: string
+          is_certified?: boolean | null
+          ninea?: string | null
+          photos?: string[] | null
+          region?: Database["public"]["Enums"]["senegal_region"]
+          rejection_reason?: string | null
+          updated_at?: string
+          user_id?: string
+          validated_by?: string | null
+          validation_date?: string | null
+          validation_status?: Database["public"]["Enums"]["seller_status"]
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      activity_sector:
+        | "artisanat"
+        | "textile"
+        | "agroalimentaire"
+        | "cosmetiques"
+        | "autre"
+      app_role: "acheteur" | "vendeur" | "agent"
+      business_type: "artisan_individuel" | "pme" | "cooperative"
+      certification_status: "en_attente" | "approuvee" | "refusee"
+      order_status:
+        | "en_attente"
+        | "confirmee"
+        | "en_preparation"
+        | "expediee"
+        | "livree"
+        | "annulee"
+      seller_status: "en_attente" | "valide" | "refuse"
+      senegal_region:
+        | "dakar"
+        | "thies"
+        | "saint_louis"
+        | "diourbel"
+        | "louga"
+        | "fatick"
+        | "kaolack"
+        | "kolda"
+        | "ziguinchor"
+        | "tambacounda"
+        | "matam"
+        | "kaffrine"
+        | "kedougou"
+        | "sedhiou"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +544,42 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      activity_sector: [
+        "artisanat",
+        "textile",
+        "agroalimentaire",
+        "cosmetiques",
+        "autre",
+      ],
+      app_role: ["acheteur", "vendeur", "agent"],
+      business_type: ["artisan_individuel", "pme", "cooperative"],
+      certification_status: ["en_attente", "approuvee", "refusee"],
+      order_status: [
+        "en_attente",
+        "confirmee",
+        "en_preparation",
+        "expediee",
+        "livree",
+        "annulee",
+      ],
+      seller_status: ["en_attente", "valide", "refuse"],
+      senegal_region: [
+        "dakar",
+        "thies",
+        "saint_louis",
+        "diourbel",
+        "louga",
+        "fatick",
+        "kaolack",
+        "kolda",
+        "ziguinchor",
+        "tambacounda",
+        "matam",
+        "kaffrine",
+        "kedougou",
+        "sedhiou",
+      ],
+    },
   },
 } as const
