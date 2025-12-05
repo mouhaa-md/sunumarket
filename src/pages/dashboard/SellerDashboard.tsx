@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Upload, X, ImageIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -74,6 +75,9 @@ const SellerDashboard = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [productImage, setProductImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
@@ -82,6 +86,31 @@ const SellerDashboard = () => {
     stock: "",
     origin_region: "dakar",
   });
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "Erreur",
+          description: "L'image ne doit pas dépasser 5MB",
+          variant: "destructive",
+        });
+        return;
+      }
+      setProductImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setProductImage(null);
+    setImagePreview(null);
+  };
 
   useEffect(() => {
     if (user) {
@@ -130,6 +159,35 @@ const SellerDashboard = () => {
       return;
     }
 
+    setIsUploading(true);
+    let imageUrl: string | null = null;
+
+    // Upload image if present
+    if (productImage) {
+      const fileExt = productImage.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError, data: uploadData } = await supabase.storage
+        .from('product-images')
+        .upload(fileName, productImage);
+
+      if (uploadError) {
+        toast({
+          title: "Erreur",
+          description: "Impossible d'uploader l'image",
+          variant: "destructive",
+        });
+        setIsUploading(false);
+        return;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+      
+      imageUrl = publicUrl;
+    }
+
     const { error } = await supabase.from("products").insert({
       seller_id: user.id,
       name: newProduct.name,
@@ -138,7 +196,10 @@ const SellerDashboard = () => {
       price: parseInt(newProduct.price),
       stock: parseInt(newProduct.stock) || 0,
       origin_region: newProduct.origin_region,
+      images: imageUrl ? [imageUrl] : null,
     } as any);
+
+    setIsUploading(false);
 
     if (error) {
       toast({
@@ -163,6 +224,8 @@ const SellerDashboard = () => {
       stock: "",
       origin_region: "dakar",
     });
+    setProductImage(null);
+    setImagePreview(null);
     fetchData();
   };
 
@@ -433,8 +496,53 @@ const SellerDashboard = () => {
                               />
                             </div>
                           </div>
-                          <Button onClick={handleAddProduct} className="w-full">
-                            Ajouter le produit
+                          
+                          {/* Image Upload */}
+                          <div className="space-y-2">
+                            <Label>Photo du produit</Label>
+                            {imagePreview ? (
+                              <div className="relative">
+                                <img
+                                  src={imagePreview}
+                                  alt="Aperçu"
+                                  className="w-full h-40 object-cover rounded-lg border"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={removeImage}
+                                  className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            ) : (
+                              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-muted-foreground/25 rounded-lg cursor-pointer hover:border-secondary transition-colors">
+                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                  <ImageIcon className="h-8 w-8 text-muted-foreground mb-2" />
+                                  <p className="text-sm text-muted-foreground">
+                                    <span className="font-medium text-secondary">Cliquez</span> ou glissez une image
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">PNG, JPG, WEBP (max. 5MB)</p>
+                                </div>
+                                <input
+                                  type="file"
+                                  accept="image/jpeg,image/png,image/webp,image/gif"
+                                  onChange={handleImageChange}
+                                  className="hidden"
+                                />
+                              </label>
+                            )}
+                          </div>
+                          
+                          <Button onClick={handleAddProduct} className="w-full" disabled={isUploading}>
+                            {isUploading ? (
+                              <>
+                                <Upload className="h-4 w-4 mr-2 animate-spin" />
+                                Ajout en cours...
+                              </>
+                            ) : (
+                              "Ajouter le produit"
+                            )}
                           </Button>
                         </div>
                       </DialogContent>
