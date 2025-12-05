@@ -80,7 +80,7 @@ interface ExportRequest {
   total_amount: number;
 }
 
-export const ExportModule = ({ isCertified }: { isCertified: boolean }) => {
+export const ExportModule = ({ isCertified, onRequestCertification }: { isCertified: boolean; onRequestCertification?: () => void }) => {
   const { user } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<{id: string; quantity: number}[]>([]);
@@ -574,7 +574,7 @@ POIDS TOTAL: ${selectedProducts.reduce((sum, sp) => sum + sp.quantity * 0.5, 0)}
             Pour accéder au module d'exportation internationale, vous devez d'abord obtenir
             la certification SunuMark pour vos produits.
           </p>
-          <Button className="mt-4">
+          <Button className="mt-4" onClick={onRequestCertification}>
             <Award className="h-4 w-4 mr-2" />
             Demander la certification
           </Button>

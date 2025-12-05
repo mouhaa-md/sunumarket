@@ -102,10 +102,32 @@ const AgentDashboard = () => {
     // Fetch pending certifications with seller info
     const { data: certData } = await supabase
       .from("certifications")
-      .select("*, seller_details!inner(business_name, user_id, region), profiles!inner(full_name, email)")
+      .select("*")
       .eq("status", "en_attente");
     
-    if (certData) setPendingCertifications(certData);
+    if (certData) {
+      // Fetch seller details for each certification
+      const enrichedCerts = await Promise.all(certData.map(async (cert) => {
+        const { data: sellerData } = await supabase
+          .from("seller_details")
+          .select("id, business_name, user_id, region")
+          .eq("user_id", cert.seller_id)
+          .maybeSingle();
+        
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("full_name, email")
+          .eq("user_id", cert.seller_id)
+          .maybeSingle();
+        
+        return {
+          ...cert,
+          seller_details: sellerData,
+          profiles: profileData,
+        };
+      }));
+      setPendingCertifications(enrichedCerts);
+    }
 
     // Fetch all orders for stats
     const { data: ordersData } = await supabase
@@ -181,8 +203,8 @@ const AgentDashboard = () => {
   };
 
   const handleApproveCertification = async (certification: any) => {
-    const sellerId = certification.seller_id;
-    const sellerUserId = certification.seller_details?.user_id;
+    const sellerUserId = certification.seller_id; // This is now the user_id (auth.uid())
+    const sellerDetailsId = certification.seller_details?.id;
 
     // 1. Update certification status
     const { error: certError } = await supabase
@@ -204,26 +226,24 @@ const AgentDashboard = () => {
     }
 
     // 2. Update seller to certified
-    await supabase
-      .from("seller_details")
-      .update({ is_certified: true } as any)
-      .eq("id", sellerId);
+    if (sellerDetailsId) {
+      await supabase
+        .from("seller_details")
+        .update({ is_certified: true } as any)
+        .eq("id", sellerDetailsId);
+    }
 
     // 3. Update all seller's products to certified
-    if (sellerUserId) {
-      await supabase
-        .from("products")
-        .update({ is_certified: true } as any)
-        .eq("seller_id", sellerUserId);
-    }
+    await supabase
+      .from("products")
+      .update({ is_certified: true } as any)
+      .eq("seller_id", sellerUserId);
 
     // 4. Update member card certification status
-    if (sellerUserId) {
-      await supabase
-        .from("member_cards")
-        .update({ certification_status: "certifie" } as any)
-        .eq("user_id", sellerUserId);
-    }
+    await supabase
+      .from("member_cards")
+      .update({ certification_status: "certifie" } as any)
+      .eq("user_id", sellerUserId);
 
     toast({
       title: "Certification approuvée !",
