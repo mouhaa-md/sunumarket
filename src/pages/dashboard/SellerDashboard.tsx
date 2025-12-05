@@ -78,11 +78,13 @@ const SellerDashboard = () => {
   const [sellerDetails, setSellerDetails] = useState<any>(null);
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [certificationRequest, setCertificationRequest] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [productImage, setProductImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSubmittingCert, setIsSubmittingCert] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
@@ -152,6 +154,56 @@ const SellerDashboard = () => {
       .order("created_at", { ascending: false });
     
     if (ordersData) setOrders(ordersData);
+
+    // Fetch certification request
+    if (detailsData) {
+      const { data: certData } = await supabase
+        .from("certifications")
+        .select("*")
+        .eq("seller_id", detailsData.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      
+      if (certData) setCertificationRequest(certData);
+    }
+  };
+
+  const handleSubmitCertification = async () => {
+    if (!user || !sellerDetails) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez compléter votre profil vendeur d'abord",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmittingCert(true);
+
+    const { error } = await supabase
+      .from("certifications")
+      .insert({
+        seller_id: sellerDetails.id,
+        status: "en_attente",
+      } as any);
+
+    setIsSubmittingCert(false);
+
+    if (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de soumettre la demande de certification",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Demande envoyée !",
+      description: "Votre demande de certification SunuMark a été soumise. Un agent du Ministère l'examinera sous peu.",
+    });
+    fetchData();
   };
 
   const handleAddProduct = async () => {
@@ -705,11 +757,51 @@ const SellerDashboard = () => {
                       </div>
                     )}
 
-                    {!sellerDetails?.is_certified && (
-                      <Button className="w-full" asChild>
-                        <Link to="/certification">
-                          Demander la certification SunuMark
-                        </Link>
+                    {/* Certification Request Status */}
+                    {!sellerDetails?.is_certified && certificationRequest && (
+                      <div className={`p-4 rounded-lg border ${
+                        certificationRequest.status === "en_attente" 
+                          ? "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800" 
+                          : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800"
+                      }`}>
+                        {certificationRequest.status === "en_attente" ? (
+                          <>
+                            <p className="font-medium text-yellow-700 dark:text-yellow-400">
+                              ⏳ Demande de certification en cours d'examen
+                            </p>
+                            <p className="text-sm text-yellow-600 dark:text-yellow-300 mt-1">
+                              Soumise le {new Date(certificationRequest.created_at).toLocaleDateString("fr-FR")}. 
+                              Un agent du Ministère examinera votre demande sous peu.
+                            </p>
+                          </>
+                        ) : certificationRequest.status === "rejetee" ? (
+                          <>
+                            <p className="font-medium text-red-700 dark:text-red-400">
+                              ❌ Demande de certification refusée
+                            </p>
+                            <p className="text-sm text-red-600 dark:text-red-300 mt-1">
+                              Motif: {certificationRequest.rejection_reason || "Non spécifié"}
+                            </p>
+                            <Button 
+                              className="mt-3" 
+                              onClick={handleSubmitCertification}
+                              disabled={isSubmittingCert}
+                            >
+                              {isSubmittingCert ? "Envoi..." : "Soumettre une nouvelle demande"}
+                            </Button>
+                          </>
+                        ) : null}
+                      </div>
+                    )}
+
+                    {/* Submit Certification Button */}
+                    {!sellerDetails?.is_certified && !certificationRequest && (
+                      <Button 
+                        className="w-full" 
+                        onClick={handleSubmitCertification}
+                        disabled={isSubmittingCert}
+                      >
+                        {isSubmittingCert ? "Envoi en cours..." : "Demander la certification SunuMark"}
                       </Button>
                     )}
                   </CardContent>
