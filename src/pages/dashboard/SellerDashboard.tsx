@@ -37,8 +37,12 @@ import {
   Star,
   ShoppingBag,
   AlertCircle,
+  Globe,
+  CreditCard,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { MemberCard } from "@/components/dashboard/MemberCard";
+import { ExportModule } from "@/components/dashboard/ExportModule";
 
 const SENEGAL_REGIONS = [
   { value: "dakar", label: "Dakar" },
@@ -240,8 +244,10 @@ const SellerDashboard = () => {
     { id: "dashboard", label: "Tableau de bord", icon: BarChart3 },
     { id: "products", label: "Mes produits", icon: Package },
     { id: "orders", label: "Commandes", icon: ClipboardList },
-    { id: "stats", label: "Statistiques", icon: TrendingUp },
+    { id: "export", label: "🚀 Export International", icon: Globe },
+    { id: "member-card", label: "Ma Carte Membre", icon: CreditCard },
     { id: "certification", label: "Certification SunuMark", icon: Award },
+    { id: "stats", label: "Statistiques", icon: TrendingUp },
     { id: "revenue", label: "Paiements/revenus", icon: DollarSign },
     { id: "business", label: "Mon entreprise", icon: Factory },
     { id: "promotions", label: "Promotions", icon: Megaphone },
@@ -624,6 +630,14 @@ const SellerDashboard = () => {
                 </Card>
               )}
 
+              {activeTab === "export" && (
+                <ExportModule isCertified={sellerDetails?.is_certified || false} />
+              )}
+
+              {activeTab === "member-card" && (
+                <MemberCard />
+              )}
+
               {activeTab === "certification" && (
                 <Card>
                   <CardHeader>
@@ -632,21 +646,69 @@ const SellerDashboard = () => {
                       Certification SunuMark
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="p-4 bg-muted rounded-lg">
-                      <p className="text-sm text-muted-foreground mb-2">
-                        La certification SunuMark garantit l'authenticité et la qualité de vos produits Made in Senegal.
-                      </p>
-                      <ul className="text-sm space-y-1">
-                        <li>✓ Badge de qualité visible sur vos produits</li>
-                        <li>✓ QR Code de traçabilité</li>
-                        <li>✓ Meilleure visibilité sur la marketplace</li>
-                        <li>✓ Confiance accrue des acheteurs</li>
+                  <CardContent className="space-y-6">
+                    {/* Current Status */}
+                    <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                      <div>
+                        <p className="font-medium">Statut actuel</p>
+                        <p className="text-sm text-muted-foreground">
+                          {sellerDetails?.is_certified ? "Certifié SunuMark" : "Non certifié"}
+                        </p>
+                      </div>
+                      {sellerDetails?.is_certified ? (
+                        <Badge className="bg-green-500">Certifié ✅</Badge>
+                      ) : (
+                        <Badge variant="outline">En attente</Badge>
+                      )}
+                    </div>
+
+                    {/* Benefits */}
+                    <div className="p-4 border rounded-lg">
+                      <p className="font-medium mb-3">Avantages de la certification</p>
+                      <ul className="text-sm space-y-2">
+                        <li className="flex items-center gap-2">
+                          <span className={sellerDetails?.is_certified ? "text-green-500" : "text-muted-foreground"}>✓</span>
+                          Badge de qualité visible sur vos produits
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className={sellerDetails?.is_certified ? "text-green-500" : "text-muted-foreground"}>✓</span>
+                          QR Code de traçabilité
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className={sellerDetails?.is_certified ? "text-green-500" : "text-muted-foreground"}>✓</span>
+                          Meilleure visibilité sur la marketplace
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className={sellerDetails?.is_certified ? "text-green-500" : "text-muted-foreground"}>✓</span>
+                          Confiance accrue des acheteurs
+                        </li>
+                        <li className="flex items-center gap-2 font-medium text-secondary">
+                          <span className={sellerDetails?.is_certified ? "text-green-500" : "text-muted-foreground"}>✓</span>
+                          Accès au module Export International
+                        </li>
                       </ul>
                     </div>
-                    <Button className="w-full">
-                      Demander la certification SunuMark
-                    </Button>
+
+                    {sellerDetails?.is_certified && (
+                      <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <p className="text-green-700 dark:text-green-400 font-medium">
+                          🎉 Félicitations ! Votre certification SunuMark vous permet maintenant d'exporter vos produits.
+                        </p>
+                        <Button 
+                          className="mt-3" 
+                          onClick={() => setActiveTab("export")}
+                        >
+                          <Globe className="h-4 w-4 mr-2" />
+                          Accéder au module Export
+                        </Button>
+                      </div>
+                    )}
+
+                    {!sellerDetails?.is_certified && (
+                      <Button className="w-full">
+                        Demander la certification SunuMark
+                      </Button>
+                    )}
                   </CardContent>
                 </Card>
               )}

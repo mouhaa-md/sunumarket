@@ -27,8 +27,12 @@ import {
   MapPin,
   XCircle,
   Eye,
+  CreditCard,
+  QrCode,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { MemberCard } from "@/components/dashboard/MemberCard";
+import { MemberVerification } from "@/components/dashboard/MemberVerification";
 
 const SENEGAL_REGIONS = [
   { value: "dakar", label: "Dakar" },
@@ -186,6 +190,8 @@ const AgentDashboard = () => {
     { id: "accueil", label: "Accueil Ministère", icon: Building2 },
     { id: "validation", label: "Validation vendeurs", icon: CheckCircle },
     { id: "certifications", label: "Certifications", icon: Award },
+    { id: "verification", label: "Vérification Cartes", icon: QrCode },
+    { id: "member-card", label: "Ma Carte Membre", icon: CreditCard },
     { id: "statistiques", label: "Statistiques nationales", icon: BarChart3 },
     { id: "signalements", label: "Signalements", icon: AlertTriangle },
     { id: "export", label: "Export données", icon: FileDown },
@@ -502,6 +508,14 @@ const AgentDashboard = () => {
                     </Tabs>
                   </CardContent>
                 </Card>
+              )}
+
+              {activeTab === "verification" && (
+                <MemberVerification />
+              )}
+
+              {activeTab === "member-card" && (
+                <MemberCard />
               )}
 
               {activeTab === "signalements" && (

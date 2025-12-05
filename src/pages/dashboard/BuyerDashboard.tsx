@@ -20,6 +20,7 @@ import {
   CheckCircle,
   Truck,
 } from "lucide-react";
+import { MemberCard } from "@/components/dashboard/MemberCard";
 
 const BuyerDashboard = () => {
   const { profile, user } = useAuth();
@@ -110,10 +111,10 @@ const BuyerDashboard = () => {
   const menuItems = [
     { id: "commandes", label: "Mes commandes", icon: ShoppingCart },
     { id: "favoris", label: "Favoris", icon: Heart },
+    { id: "member-card", label: "Ma Carte Membre", icon: CreditCard },
     { id: "suivi", label: "Suivi de colis", icon: Package },
     { id: "profil", label: "Mon profil", icon: User },
     { id: "adresses", label: "Mes adresses", icon: MapPin },
-    { id: "paiement", label: "Paiement mobile", icon: CreditCard },
     { id: "aide", label: "Aide/Support", icon: HelpCircle },
   ];
 
@@ -401,6 +402,10 @@ const BuyerDashboard = () => {
                     </div>
                   </CardContent>
                 </Card>
+              )}
+
+              {activeTab === "member-card" && (
+                <MemberCard />
               )}
 
               {activeTab === "aide" && (
