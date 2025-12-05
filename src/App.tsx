@@ -15,6 +15,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import BuyerDashboard from "./pages/dashboard/BuyerDashboard";
 import SellerDashboard from "./pages/dashboard/SellerDashboard";
 import AgentDashboard from "./pages/dashboard/AgentDashboard";
+import LuumaChatbot from "./components/LuumaChatbot";
 
 const queryClient = new QueryClient();
 
@@ -136,6 +137,7 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <AppRoutes />
+            <LuumaChatbot />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
