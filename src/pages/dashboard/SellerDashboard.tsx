@@ -256,48 +256,48 @@ const SellerDashboard = () => {
                   {/* KPI Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
+                      <CardContent className="p-6 h-full">
+                        <div className="flex items-start justify-between h-full">
+                          <div className="flex flex-col justify-between h-full min-h-[60px]">
                             <p className="text-sm text-muted-foreground">Chiffre d'affaires</p>
-                            <p className="text-2xl font-bold">{totalRevenue.toLocaleString()} FCFA</p>
+                            <p className="text-2xl font-bold mt-2">{totalRevenue.toLocaleString()} FCFA</p>
                           </div>
-                          <DollarSign className="h-8 w-8 text-green-500" />
+                          <DollarSign className="h-8 w-8 text-green-500 flex-shrink-0" />
                         </div>
                       </CardContent>
                     </Card>
                     <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
+                      <CardContent className="p-6 h-full">
+                        <div className="flex items-start justify-between h-full">
+                          <div className="flex flex-col justify-between h-full min-h-[60px]">
                             <p className="text-sm text-muted-foreground">Commandes en attente</p>
-                            <p className="text-2xl font-bold">{pendingOrders}</p>
+                            <p className="text-2xl font-bold mt-2">{pendingOrders}</p>
                           </div>
-                          <ShoppingBag className="h-8 w-8 text-orange-500" />
+                          <ShoppingBag className="h-8 w-8 text-orange-500 flex-shrink-0" />
                         </div>
                       </CardContent>
                     </Card>
                     <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
+                      <CardContent className="p-6 h-full">
+                        <div className="flex items-start justify-between h-full">
+                          <div className="flex flex-col justify-between h-full min-h-[60px]">
                             <p className="text-sm text-muted-foreground">Produits en stock</p>
-                            <p className="text-2xl font-bold">{totalStock}</p>
+                            <p className="text-2xl font-bold mt-2">{totalStock}</p>
                           </div>
-                          <Package className="h-8 w-8 text-blue-500" />
+                          <Package className="h-8 w-8 text-blue-500 flex-shrink-0" />
                         </div>
                       </CardContent>
                     </Card>
                     <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
+                      <CardContent className="p-6 h-full">
+                        <div className="flex items-start justify-between h-full">
+                          <div className="flex flex-col justify-between h-full min-h-[60px]">
                             <p className="text-sm text-muted-foreground">Avis clients</p>
-                            <p className="text-2xl font-bold flex items-center gap-1">
+                            <p className="text-2xl font-bold flex items-center gap-1 mt-2">
                               4.8 <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
                             </p>
                           </div>
-                          <Star className="h-8 w-8 text-yellow-500" />
+                          <Star className="h-8 w-8 text-yellow-500 flex-shrink-0" />
                         </div>
                       </CardContent>
                     </Card>
