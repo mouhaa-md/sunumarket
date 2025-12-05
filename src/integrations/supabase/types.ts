@@ -121,6 +121,105 @@ export type Database = {
           },
         ]
       }
+      export_authorizations: {
+        Row: {
+          approval_date: string | null
+          approved_by: string | null
+          countries_authorized: string[]
+          created_at: string
+          id: string
+          products_authorized: Json
+          seller_id: string
+          status: string
+          valid_until: string
+        }
+        Insert: {
+          approval_date?: string | null
+          approved_by?: string | null
+          countries_authorized?: string[]
+          created_at?: string
+          id?: string
+          products_authorized?: Json
+          seller_id: string
+          status?: string
+          valid_until?: string
+        }
+        Update: {
+          approval_date?: string | null
+          approved_by?: string | null
+          countries_authorized?: string[]
+          created_at?: string
+          id?: string
+          products_authorized?: Json
+          seller_id?: string
+          status?: string
+          valid_until?: string
+        }
+        Relationships: []
+      }
+      export_requests: {
+        Row: {
+          created_at: string
+          destination_country: string
+          documents_generated: Json | null
+          finalized_at: string | null
+          id: string
+          insurance: boolean | null
+          payment_method: string | null
+          products: Json
+          quantity_total: number
+          seller_id: string
+          shipping_cost: number | null
+          status: string
+          step_current: number
+          step_statuses: Json
+          total_amount: number | null
+          tracking_number: string | null
+          transporter: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          destination_country: string
+          documents_generated?: Json | null
+          finalized_at?: string | null
+          id?: string
+          insurance?: boolean | null
+          payment_method?: string | null
+          products?: Json
+          quantity_total?: number
+          seller_id: string
+          shipping_cost?: number | null
+          status?: string
+          step_current?: number
+          step_statuses?: Json
+          total_amount?: number | null
+          tracking_number?: string | null
+          transporter?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          destination_country?: string
+          documents_generated?: Json | null
+          finalized_at?: string | null
+          id?: string
+          insurance?: boolean | null
+          payment_method?: string | null
+          products?: Json
+          quantity_total?: number
+          seller_id?: string
+          shipping_cost?: number | null
+          status?: string
+          step_current?: number
+          step_statuses?: Json
+          total_amount?: number | null
+          tracking_number?: string | null
+          transporter?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string
@@ -149,6 +248,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      member_cards: {
+        Row: {
+          card_id: string
+          certification_status: string
+          created_at: string
+          date_emission: string
+          date_expiration: string
+          id: string
+          is_active: boolean
+          member_type: string
+          qr_code_hash: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card_id: string
+          certification_status?: string
+          created_at?: string
+          date_emission?: string
+          date_expiration?: string
+          id?: string
+          is_active?: boolean
+          member_type?: string
+          qr_code_hash?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          card_id?: string
+          certification_status?: string
+          created_at?: string
+          date_emission?: string
+          date_expiration?: string
+          id?: string
+          is_active?: boolean
+          member_type?: string
+          qr_code_hash?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       orders: {
         Row: {
@@ -373,6 +514,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_card_id: { Args: never; Returns: string }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
