@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
@@ -705,8 +706,10 @@ const SellerDashboard = () => {
                     )}
 
                     {!sellerDetails?.is_certified && (
-                      <Button className="w-full">
-                        Demander la certification SunuMark
+                      <Button className="w-full" asChild>
+                        <Link to="/certification">
+                          Demander la certification SunuMark
+                        </Link>
                       </Button>
                     )}
                   </CardContent>
