@@ -244,7 +244,7 @@ const SellerDashboard = () => {
     { id: "dashboard", label: "Tableau de bord", icon: BarChart3 },
     { id: "products", label: "Mes produits", icon: Package },
     { id: "orders", label: "Commandes", icon: ClipboardList },
-    { id: "export", label: "🚀 Export International", icon: Globe },
+    { id: "export", label: "Export International", icon: Globe },
     { id: "member-card", label: "Ma Carte Membre", icon: CreditCard },
     { id: "certification", label: "Certification SunuMark", icon: Award },
     { id: "stats", label: "Statistiques", icon: TrendingUp },
