@@ -1,18 +1,83 @@
-import { useState } from "react";
-import { products, categories, regions } from "@/data/products";
+import { useState, useEffect } from "react";
+import { products as staticProducts, categories, regions, Product as StaticProduct } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+
+// Map database region to display region
+const regionDisplayMap: Record<string, string> = {
+  dakar: "Dakar",
+  thies: "Thiès",
+  saint_louis: "Saint-Louis",
+  diourbel: "Diourbel",
+  louga: "Louga",
+  fatick: "Fatick",
+  kaolack: "Kaolack",
+  kolda: "Kolda",
+  ziguinchor: "Ziguinchor",
+  tambacounda: "Tambacounda",
+  matam: "Matam",
+  kaffrine: "Kaffrine",
+  kedougou: "Kédougou",
+  sedhiou: "Sédhiou",
+};
+
+// Map database category to display category
+const categoryDisplayMap: Record<string, string> = {
+  artisanat: "Artisanat",
+  textile: "Textile",
+  agroalimentaire: "Agroalimentaire",
+  cosmetiques: "Cosmétique",
+  autre: "Autre",
+  maroquinerie: "Maroquinerie",
+  bijouterie: "Bijouterie",
+};
 
 const Marketplace = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Tous");
   const [selectedRegion, setSelectedRegion] = useState("Toutes");
+  const [dbProducts, setDbProducts] = useState<StaticProduct[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredProducts = products.filter((product) => {
+  // Fetch products from Supabase
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("is_active", true);
+
+      if (!error && data) {
+        const mappedProducts: StaticProduct[] = data.map((p) => ({
+          id: p.id,
+          name: p.name,
+          price: p.price,
+          category: categoryDisplayMap[p.category] || p.category,
+          region: p.origin_region ? regionDisplayMap[p.origin_region] || p.origin_region : "Dakar",
+          producer: "Vendeur SunuMarket",
+          image: p.images?.[0] || "/placeholder.svg",
+          certified: p.is_certified || false,
+          description: p.description || "",
+          origin: p.origin_region ? regionDisplayMap[p.origin_region] || p.origin_region : "Sénégal",
+        }));
+        setDbProducts(mappedProducts);
+      }
+      setIsLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Combine static products with database products
+  const allProducts = [...staticProducts, ...dbProducts];
+
+  const filteredProducts = allProducts.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.producer.toLowerCase().includes(searchTerm.toLowerCase());
@@ -105,7 +170,11 @@ const Marketplace = () => {
             </p>
           </div>
 
-          {filteredProducts.length === 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center py-16">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-xl text-muted-foreground">
                 Aucun produit trouvé. Essayez d'autres filtres.
