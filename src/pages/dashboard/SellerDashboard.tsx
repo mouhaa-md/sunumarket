@@ -156,17 +156,15 @@ const SellerDashboard = () => {
     if (ordersData) setOrders(ordersData);
 
     // Fetch certification request
-    if (detailsData) {
-      const { data: certData } = await supabase
-        .from("certifications")
-        .select("*")
-        .eq("seller_id", detailsData.id)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      
-      if (certData) setCertificationRequest(certData);
-    }
+    const { data: certData } = await supabase
+      .from("certifications")
+      .select("*")
+      .eq("seller_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    
+    if (certData) setCertificationRequest(certData);
   };
 
   const handleSubmitCertification = async () => {
@@ -184,7 +182,7 @@ const SellerDashboard = () => {
     const { error } = await supabase
       .from("certifications")
       .insert({
-        seller_id: sellerDetails.id,
+        seller_id: user.id,
         status: "en_attente",
       } as any);
 
@@ -684,7 +682,10 @@ const SellerDashboard = () => {
               )}
 
               {activeTab === "export" && (
-                <ExportModule isCertified={sellerDetails?.is_certified || false} />
+                <ExportModule 
+                  isCertified={sellerDetails?.is_certified || false} 
+                  onRequestCertification={() => setActiveTab("certification")}
+                />
               )}
 
               {activeTab === "member-card" && (
