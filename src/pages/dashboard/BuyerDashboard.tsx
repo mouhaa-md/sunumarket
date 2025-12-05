@@ -46,13 +46,20 @@ const BuyerDashboard = () => {
     
     if (ordersData) setOrders(ordersData);
 
-    // Fetch favorites
+    // Fetch favorites with product details
     const { data: favoritesData } = await supabase
       .from("favorites")
-      .select("*, product_id")
+      .select("*, products(*)")
       .eq("user_id", user.id);
     
-    if (favoritesData) setFavorites(favoritesData);
+    if (favoritesData) {
+      // Map the products data to a more usable format
+      const mappedFavorites = favoritesData.map(fav => ({
+        ...fav,
+        product: fav.products
+      }));
+      setFavorites(mappedFavorites);
+    }
 
     // Fetch buyer details
     const { data: detailsData } = await supabase
@@ -62,6 +69,18 @@ const BuyerDashboard = () => {
       .maybeSingle();
     
     if (detailsData) setBuyerDetails(detailsData);
+  };
+
+  const removeFavorite = async (productId: string) => {
+    if (!user) return;
+    
+    await supabase
+      .from("favorites")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("product_id", productId);
+    
+    setFavorites(favorites.filter(f => f.product_id !== productId));
   };
 
   const getStatusColor = (status: string) => {
@@ -236,7 +255,7 @@ const BuyerDashboard = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Heart className="h-5 w-5 text-red-500" />
-                      Mes favoris
+                      Mes favoris ({favorites.length})
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -249,9 +268,35 @@ const BuyerDashboard = () => {
                         </Link>
                       </div>
                     ) : (
-                      <p className="text-muted-foreground">
-                        {favorites.length} produit(s) en favoris
-                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {favorites.map((fav) => (
+                          <div key={fav.id} className="flex items-center gap-4 p-4 border rounded-lg hover:border-secondary transition-colors">
+                            <img
+                              src={fav.product?.image || "/placeholder.svg"}
+                              alt={fav.product?.name || "Produit"}
+                              className="w-20 h-20 object-cover rounded-lg"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium truncate">{fav.product?.name || "Produit"}</h4>
+                              <p className="text-sm text-muted-foreground">{fav.product?.producer || ""}</p>
+                              <p className="text-secondary font-bold">{fav.product?.price?.toLocaleString() || 0} FCFA</p>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <Link to={`/produit/${fav.product_id}`}>
+                                <Button size="sm" variant="outline">Voir</Button>
+                              </Link>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="text-red-500 hover:text-red-600"
+                                onClick={() => removeFavorite(fav.product_id)}
+                              >
+                                <Heart className="h-4 w-4 fill-current" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </CardContent>
                 </Card>
@@ -368,14 +413,19 @@ const BuyerDashboard = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="p-4 bg-muted rounded-lg">
-                      <p className="font-medium">Numéro vert (gratuit)</p>
-                      <p className="text-2xl font-bold text-secondary">800 00 12 34</p>
+                      <p className="font-medium">Support SunuMarket</p>
+                      <p className="text-2xl font-bold text-secondary">+221 76 948 17 73</p>
                     </div>
-                    <div className="p-4 bg-muted rounded-lg">
-                      <p className="font-medium">WhatsApp Support</p>
-                      <p className="text-lg">+221 76 948 17 73</p>
-                    </div>
-                    <Button className="w-full">Démarrer un chat</Button>
+                    <a
+                      href="https://wa.me/221769481773?text=Bonjour, j'ai besoin d'aide sur SunuMarket"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block"
+                    >
+                      <Button className="w-full bg-green-600 hover:bg-green-700">
+                        Contacter via WhatsApp
+                      </Button>
+                    </a>
                   </CardContent>
                 </Card>
               )}

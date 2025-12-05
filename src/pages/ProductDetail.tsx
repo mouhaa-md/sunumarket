@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { products } from "@/data/products";
 import Header from "@/components/Header";
@@ -5,13 +6,81 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, MapPin, User, ArrowLeft, Package } from "lucide-react";
+import { ShieldCheck, MapPin, User, ArrowLeft, Package, Heart } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import NotFound from "./NotFound";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { user, userRole } = useAuth();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const product = products.find((p) => p.id === id);
+
+  useEffect(() => {
+    if (user && userRole === "acheteur" && product) {
+      checkFavorite();
+    }
+  }, [user, userRole, product?.id]);
+
+  const checkFavorite = async () => {
+    if (!user || !product) return;
+    
+    const { data } = await supabase
+      .from("favorites")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("product_id", product.id)
+      .maybeSingle();
+    
+    setIsFavorite(!!data);
+  };
+
+  const toggleFavorite = async () => {
+    if (!user) {
+      toast.error("Connectez-vous pour ajouter aux favoris");
+      return;
+    }
+
+    if (userRole !== "acheteur") {
+      toast.error("Seuls les acheteurs peuvent ajouter aux favoris");
+      return;
+    }
+
+    if (!product) return;
+
+    setIsLoading(true);
+
+    try {
+      if (isFavorite) {
+        await supabase
+          .from("favorites")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("product_id", product.id);
+        
+        setIsFavorite(false);
+        toast.success("Retiré des favoris");
+      } else {
+        await supabase
+          .from("favorites")
+          .insert({
+            user_id: user.id,
+            product_id: product.id
+          });
+        
+        setIsFavorite(true);
+        toast.success("Ajouté aux favoris");
+      }
+    } catch (error) {
+      toast.error("Une erreur est survenue");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!product) {
     return <NotFound />;
@@ -130,13 +199,24 @@ const ProductDetail = () => {
                 </p>
               </div>
 
-              <Button
-                size="lg"
-                className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground"
-                onClick={handleWhatsAppOrder}
-              >
-                Commander via WhatsApp
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  size="lg"
+                  className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+                  onClick={handleWhatsAppOrder}
+                >
+                  Commander via WhatsApp
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={toggleFavorite}
+                  disabled={isLoading}
+                  className={isFavorite ? "text-red-500 border-red-500 hover:bg-red-50" : ""}
+                >
+                  <Heart className={`h-5 w-5 ${isFavorite ? "fill-current" : ""}`} />
+                </Button>
+              </div>
 
               <p className="text-xs text-center text-muted-foreground">
                 Vous serez redirigé vers WhatsApp pour finaliser votre commande
