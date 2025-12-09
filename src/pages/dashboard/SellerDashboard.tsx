@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Upload, X, ImageIcon } from "lucide-react";
+import { Upload, X, ImageIcon, QrCode } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -45,6 +45,7 @@ import { toast } from "@/hooks/use-toast";
 import { MemberCard } from "@/components/dashboard/MemberCard";
 import { ExportModule } from "@/components/dashboard/ExportModule";
 import { FinanceModule } from "@/components/dashboard/FinanceModule";
+import TraceabilityModule from "@/components/dashboard/TraceabilityModule";
 
 const SENEGAL_REGIONS = [
   { value: "dakar", label: "Dakar" },
@@ -296,6 +297,7 @@ const SellerDashboard = () => {
     { id: "dashboard", label: "Tableau de bord", icon: BarChart3 },
     { id: "products", label: "Mes produits", icon: Package },
     { id: "orders", label: "Commandes", icon: ClipboardList },
+    { id: "traceability", label: "Traçabilité", icon: QrCode },
     { id: "finance", label: "Financement & Croissance", icon: TrendingUp },
     { id: "export", label: "Export International", icon: Globe },
     { id: "member-card", label: "Ma Carte Membre", icon: CreditCard },
@@ -855,6 +857,13 @@ const SellerDashboard = () => {
                     )}
                   </CardContent>
                 </Card>
+              )}
+
+              {activeTab === "traceability" && (
+                <TraceabilityModule 
+                  products={products}
+                  sellerDetails={sellerDetails}
+                />
               )}
 
               {(activeTab === "stats" || activeTab === "promotions") && (
