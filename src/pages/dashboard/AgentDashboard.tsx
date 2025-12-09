@@ -34,6 +34,7 @@ import { toast } from "@/hooks/use-toast";
 import { MemberCard } from "@/components/dashboard/MemberCard";
 import { MemberVerification } from "@/components/dashboard/MemberVerification";
 import TraceabilityModule from "@/components/dashboard/TraceabilityModule";
+import { AgentExportModule } from "@/components/dashboard/AgentExportModule";
 
 const SENEGAL_REGIONS = [
   { value: "dakar", label: "Dakar" },
@@ -713,34 +714,12 @@ const AgentDashboard = () => {
               )}
 
               {activeTab === "export" && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <FileDown className="h-5 w-5 text-secondary" />
-                      Export de données
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Button variant="outline" className="h-20 flex-col gap-2">
-                        <FileDown className="h-6 w-6" />
-                        <span>Exporter vendeurs (Excel)</span>
-                      </Button>
-                      <Button variant="outline" className="h-20 flex-col gap-2">
-                        <FileDown className="h-6 w-6" />
-                        <span>Exporter commandes (Excel)</span>
-                      </Button>
-                      <Button variant="outline" className="h-20 flex-col gap-2">
-                        <FileDown className="h-6 w-6" />
-                        <span>Rapport PDF mensuel</span>
-                      </Button>
-                      <Button variant="outline" className="h-20 flex-col gap-2">
-                        <FileDown className="h-6 w-6" />
-                        <span>Statistiques régionales</span>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <AgentExportModule
+                  allSellers={allSellers}
+                  allProducts={allProducts}
+                  allOrders={allOrders}
+                  processedCertifications={processedCertifications}
+                />
               )}
 
               {activeTab === "traceability" && (
