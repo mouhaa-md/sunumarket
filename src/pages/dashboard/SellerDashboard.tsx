@@ -863,6 +863,10 @@ const SellerDashboard = () => {
                 <TraceabilityModule 
                   products={products}
                   sellerDetails={sellerDetails}
+                  onNavigateToProducts={() => {
+                    setActiveTab("products");
+                    setIsAddProductOpen(true);
+                  }}
                 />
               )}
 
