@@ -380,7 +380,7 @@ const BuyerDashboard = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="p-4 border rounded-lg text-center hover:border-secondary transition-colors cursor-pointer">
                         <div className="w-12 h-12 bg-orange-500 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold">
                           OM
@@ -392,6 +392,12 @@ const BuyerDashboard = () => {
                           W
                         </div>
                         <p className="font-medium">Wave</p>
+                      </div>
+                      <div className="p-4 border rounded-lg text-center hover:border-secondary transition-colors cursor-pointer">
+                        <div className="w-12 h-12 bg-emerald-600 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold text-xs">
+                          ECO
+                        </div>
+                        <p className="font-medium">EcoBank</p>
                       </div>
                       <div className="p-4 border rounded-lg text-center hover:border-secondary transition-colors cursor-pointer">
                         <div className="w-12 h-12 bg-purple-500 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold">

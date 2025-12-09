@@ -20,7 +20,7 @@ interface PaymentModalProps {
 
 const PaymentModal = ({ isOpen, onClose, productName, amount }: PaymentModalProps) => {
   const [phone, setPhone] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"wave" | "orange" | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"wave" | "orange" | "ecobank" | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handlePayment = async () => {
@@ -49,7 +49,7 @@ const PaymentModal = ({ isOpen, onClose, productName, amount }: PaymentModalProp
         <DialogHeader>
           <DialogTitle>Paiement Mobile</DialogTitle>
           <DialogDescription>
-            Payez votre commande via Wave ou Orange Money
+            Payez votre commande via Wave, Orange Money ou EcoBank
           </DialogDescription>
         </DialogHeader>
         
@@ -76,7 +76,7 @@ const PaymentModal = ({ isOpen, onClose, productName, amount }: PaymentModalProp
           
           <div className="space-y-2">
             <Label>Méthode de paiement</Label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <Button
                 type="button"
                 variant={paymentMethod === "wave" ? "default" : "outline"}
@@ -84,8 +84,8 @@ const PaymentModal = ({ isOpen, onClose, productName, amount }: PaymentModalProp
                 className="h-16"
               >
                 <div className="text-center">
-                  <div className="font-bold text-lg">Wave</div>
-                  <div className="text-xs">Paiement rapide</div>
+                  <div className="font-bold text-sm">Wave</div>
+                  <div className="text-xs">Rapide</div>
                 </div>
               </Button>
               <Button
@@ -95,8 +95,19 @@ const PaymentModal = ({ isOpen, onClose, productName, amount }: PaymentModalProp
                 className="h-16"
               >
                 <div className="text-center">
-                  <div className="font-bold text-lg">Orange Money</div>
-                  <div className="text-xs">Paiement sécurisé</div>
+                  <div className="font-bold text-sm">Orange Money</div>
+                  <div className="text-xs">Sécurisé</div>
+                </div>
+              </Button>
+              <Button
+                type="button"
+                variant={paymentMethod === "ecobank" ? "default" : "outline"}
+                onClick={() => setPaymentMethod("ecobank")}
+                className="h-16"
+              >
+                <div className="text-center">
+                  <div className="font-bold text-sm">EcoBank</div>
+                  <div className="text-xs">Partenaire</div>
                 </div>
               </Button>
             </div>
