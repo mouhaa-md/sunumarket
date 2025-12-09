@@ -20,6 +20,8 @@ import {
 import { QRCodeSVG } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import RegionalStatsTable from "./RegionalStatsTable";
+import { jsPDF } from "jspdf";
+import { toast } from "@/hooks/use-toast";
 
 interface Product {
   id: string;
@@ -370,7 +372,16 @@ const TraceabilityModule = ({
                 </div>
               </div>
             </div>
-            <Button className="bg-secondary hover:bg-secondary/90">
+            <Button 
+              className="bg-secondary hover:bg-secondary/90"
+              onClick={() => handleDownloadCertificate(
+                isGlobalView,
+                isGlobalView ? "Bilan National" : (sellerDetails?.business_name || "Vendeur"),
+                isGlobalView ? (globalStats?.totalProducts || 0) : totalProducts,
+                isGlobalView ? (globalStats?.certifiedSellers || 0) : certifiedProducts,
+                impactMetrics
+              )}
+            >
               <Download className="h-4 w-4 mr-2" />
               {isGlobalView ? "Exporter Rapport" : "Télécharger Certificat"}
             </Button>
@@ -379,6 +390,103 @@ const TraceabilityModule = ({
       </Card>
     </div>
   );
+};
+
+// Function to download the impact certificate as PDF
+const handleDownloadCertificate = (
+  isGlobalView: boolean,
+  businessName: string,
+  totalProducts: number,
+  certifiedCount: number,
+  impactMetrics: { jobsCreated: number; localEconomy: number }
+) => {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  
+  // Header
+  doc.setFillColor(26, 54, 39); // Dark green
+  doc.rect(0, 0, pageWidth, 45, "F");
+  
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(24);
+  doc.setFont("helvetica", "bold");
+  doc.text("SUNUMARKET", pageWidth / 2, 20, { align: "center" });
+  
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "normal");
+  doc.text(isGlobalView ? "Bilan National Made in Senegal" : "Certificat d'Impact Local", pageWidth / 2, 32, { align: "center" });
+  
+  // Gold accent line
+  doc.setFillColor(212, 175, 55);
+  doc.rect(0, 45, pageWidth, 3, "F");
+  
+  // Reset text color
+  doc.setTextColor(0, 0, 0);
+  
+  // Certificate content
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("Certifié le : " + new Date().toLocaleDateString("fr-FR", { 
+    day: "numeric", 
+    month: "long", 
+    year: "numeric" 
+  }), 20, 65);
+  
+  doc.setFontSize(16);
+  doc.text(businessName, 20, 85);
+  
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.text("Ce certificat atteste de la contribution à l'économie locale sénégalaise", 20, 100);
+  doc.text("à travers la plateforme SunuMarket.", 20, 108);
+  
+  // Stats box
+  doc.setFillColor(245, 245, 245);
+  doc.roundedRect(20, 120, pageWidth - 40, 70, 5, 5, "F");
+  
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("Indicateurs d'Impact", 30, 135);
+  
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  
+  const stats = [
+    { label: "Produits tracés", value: totalProducts.toString() },
+    { label: isGlobalView ? "Vendeurs certifiés" : "Produits certifiés SunuMark", value: certifiedCount.toString() },
+    { label: "Emplois créés/soutenus", value: impactMetrics.jobsCreated.toLocaleString() },
+    { label: "Impact économique local", value: `${impactMetrics.localEconomy.toLocaleString()} FCFA` },
+    { label: "Origine", value: "100% Made in Senegal" },
+  ];
+  
+  stats.forEach((stat, index) => {
+    const yPos = 148 + (index * 10);
+    doc.text(stat.label + " :", 30, yPos);
+    doc.setFont("helvetica", "bold");
+    doc.text(stat.value, 130, yPos);
+    doc.setFont("helvetica", "normal");
+  });
+  
+  // Footer
+  doc.setFillColor(26, 54, 39);
+  doc.rect(0, 270, pageWidth, 27, "F");
+  
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(9);
+  doc.text("SunuMarket - Plateforme Officielle Made in Senegal", pageWidth / 2, 280, { align: "center" });
+  doc.text("Ministère du Commerce et de l'Industrie du Sénégal", pageWidth / 2, 288, { align: "center" });
+  
+  // Save
+  const fileName = isGlobalView 
+    ? `bilan-national-sunumarket-${new Date().toISOString().split('T')[0]}.pdf`
+    : `certificat-impact-${businessName.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
+  
+  doc.save(fileName);
+  
+  toast({
+    title: "Certificat téléchargé",
+    description: `Le ${isGlobalView ? "bilan national" : "certificat d'impact"} a été enregistré.`,
+  });
 };
 
 export default TraceabilityModule;
