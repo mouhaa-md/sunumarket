@@ -298,7 +298,7 @@ const SellerDashboard = () => {
     { id: "products", label: "Mes produits", icon: Package },
     { id: "orders", label: "Commandes", icon: ClipboardList },
     { id: "traceability", label: "Traçabilité", icon: QrCode },
-    { id: "finance", label: "Financement & Croissance", icon: TrendingUp },
+    { id: "finance", label: "Financement", icon: TrendingUp },
     { id: "export", label: "Export International", icon: Globe },
     { id: "member-card", label: "Ma Carte Membre", icon: CreditCard },
     { id: "certification", label: "Certification SunuMark", icon: Award },

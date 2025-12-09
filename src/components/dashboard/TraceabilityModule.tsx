@@ -158,206 +158,179 @@ const TraceabilityModule = ({
         </Card>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Regional Statistics Table */}
+      {/* Product QR Codes (seller view) - HORIZONTAL at top */}
+      {!isGlobalView && (
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2">
+              <QrCode className="h-5 w-5 text-secondary" />
+              QR Codes Produits
+            </CardTitle>
+            <CardDescription>Traçabilité complète pour vos clients</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {products.length === 0 ? (
+              <div className="text-center py-6">
+                <div className="p-4 rounded-full bg-muted/50 w-fit mx-auto mb-4">
+                  <Package className="h-10 w-10 text-muted-foreground" />
+                </div>
+                <p className="font-medium mb-1">Aucun produit à afficher</p>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Ajoutez des produits pour générer leurs QR codes de traçabilité
+                </p>
+                {onNavigateToProducts && (
+                  <Button onClick={onNavigateToProducts} className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Ajouter un produit
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                {products.slice(0, 10).map((product) => (
+                  <Dialog key={product.id}>
+                    <DialogTrigger asChild>
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors cursor-pointer group">
+                        <div className="p-2 bg-white rounded-lg border group-hover:shadow-md transition-shadow">
+                          <QRCodeSVG
+                            value={generateProductQRUrl(product.id)}
+                            size={56}
+                            level="M"
+                          />
+                        </div>
+                        <div className="text-center min-w-0 w-full">
+                          <p className="font-medium text-sm truncate">{product.name}</p>
+                          <p className="text-xs text-muted-foreground truncate">{product.category}</p>
+                        </div>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Parcours Produit</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="flex justify-center p-4 bg-white rounded-xl border">
+                          <QRCodeSVG
+                            value={generateProductQRUrl(product.id)}
+                            size={180}
+                            level="H"
+                            includeMargin
+                          />
+                        </div>
+                        <p className="text-xs text-center text-muted-foreground">
+                          Scannez pour vérifier sur sunumarket.sn/verify/{product.id.slice(0, 8)}...
+                        </p>
+                        
+                        <div className="text-center">
+                          <h3 className="font-semibold text-lg">{product.name}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {sellerDetails?.business_name} • {product.origin_region || sellerDetails?.region}
+                          </p>
+                          {product.is_certified && (
+                            <Badge className="mt-2 bg-secondary text-secondary-foreground">
+                              <ShieldCheck className="h-3 w-3 mr-1" />
+                              Certifié SunuMark
+                            </Badge>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium text-muted-foreground">Parcours du produit</p>
+                          <div className="relative">
+                            {PRODUCT_JOURNEY_STEPS.map((step, index) => (
+                              <div key={step.id} className="flex items-center gap-3 py-2">
+                                <div className={`p-2 rounded-full ${
+                                  index <= 2 ? 'bg-green-500/20 text-green-600' : 'bg-muted text-muted-foreground'
+                                }`}>
+                                  <step.icon className="h-4 w-4" />
+                                </div>
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium">{step.label}</p>
+                                  <p className="text-xs text-muted-foreground">{step.description}</p>
+                                </div>
+                                {index <= 2 && (
+                                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <Button className="w-full" variant="outline">
+                          <Download className="h-4 w-4 mr-2" />
+                          Télécharger QR Code
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Global Stats (agent view) */}
+      {isGlobalView && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-secondary" />
-              Statistiques {isGlobalView ? "Nationales" : "Régionales"}
+              <ShieldCheck className="h-5 w-5 text-secondary" />
+              Statistiques Certifications
             </CardTitle>
-            <CardDescription>
-              {isGlobalView 
-                ? "Distribution des artisans sur le territoire"
-                : "Réseau national des artisans Made in Senegal"
-              }
-            </CardDescription>
+            <CardDescription>État des certifications SunuMark</CardDescription>
           </CardHeader>
-          <CardContent>
-            <RegionalStatsTable 
-              regionsData={regionsData}
-              selectedRegion={selectedRegion}
-              onRegionClick={(id) => setSelectedRegion(selectedRegion === id ? null : id)}
-              isGlobalView={isGlobalView}
-            />
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="p-4 rounded-lg bg-primary/10 text-center">
+                <p className="text-3xl font-bold text-primary">{globalStats?.totalSellers || 0}</p>
+                <p className="text-xs text-muted-foreground">Vendeurs inscrits</p>
+              </div>
+              <div className="p-4 rounded-lg bg-secondary/10 text-center">
+                <p className="text-3xl font-bold text-secondary">{globalStats?.certifiedSellers || 0}</p>
+                <p className="text-xs text-muted-foreground">Certifiés SunuMark</p>
+              </div>
+              <div className="p-4 rounded-lg border bg-muted/20 text-center">
+                <p className="text-3xl font-bold text-secondary">
+                  {globalStats?.totalSellers 
+                    ? Math.round((globalStats.certifiedSellers / globalStats.totalSellers) * 100)
+                    : 0
+                  }%
+                </p>
+                <p className="text-xs text-muted-foreground">Taux certification</p>
+              </div>
+              <div className="p-4 rounded-lg bg-gradient-to-r from-primary/5 to-secondary/5 border text-center">
+                <p className="text-3xl font-bold">{globalStats?.totalProducts || 0}</p>
+                <p className="text-xs text-muted-foreground">Produits marketplace</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
+      )}
 
-        {/* Product QR Codes (seller view) or Global Stats (agent view) */}
-        {isGlobalView ? (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-secondary" />
-                Statistiques Certifications
-              </CardTitle>
-              <CardDescription>État des certifications SunuMark</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-4 rounded-lg bg-primary/10 text-center">
-                  <p className="text-3xl font-bold text-primary">{globalStats?.totalSellers || 0}</p>
-                  <p className="text-xs text-muted-foreground">Vendeurs inscrits</p>
-                </div>
-                <div className="p-4 rounded-lg bg-secondary/10 text-center">
-                  <p className="text-3xl font-bold text-secondary">{globalStats?.certifiedSellers || 0}</p>
-                  <p className="text-xs text-muted-foreground">Certifiés SunuMark</p>
-                </div>
-              </div>
-              
-              <div className="p-4 rounded-lg border bg-muted/20">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium">Taux de certification</span>
-                  <span className="text-lg font-bold text-secondary">
-                    {globalStats?.totalSellers 
-                      ? Math.round((globalStats.certifiedSellers / globalStats.totalSellers) * 100)
-                      : 0
-                    }%
-                  </span>
-                </div>
-                <div className="w-full bg-muted rounded-full h-2">
-                  <div 
-                    className="bg-secondary h-2 rounded-full transition-all"
-                    style={{ 
-                      width: `${globalStats?.totalSellers 
-                        ? (globalStats.certifiedSellers / globalStats.totalSellers) * 100 
-                        : 0}%` 
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="p-4 rounded-lg bg-gradient-to-r from-primary/5 to-secondary/5 border">
-                <div className="flex items-center gap-3">
-                  <Package className="h-8 w-8 text-primary" />
-                  <div>
-                    <p className="text-2xl font-bold">{globalStats?.totalProducts || 0}</p>
-                    <p className="text-xs text-muted-foreground">Produits sur le marketplace</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <QrCode className="h-5 w-5 text-secondary" />
-                QR Codes Produits
-              </CardTitle>
-              <CardDescription>Traçabilité complète pour vos clients</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {products.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="p-4 rounded-full bg-muted/50 w-fit mx-auto mb-4">
-                    <Package className="h-12 w-12 text-muted-foreground" />
-                  </div>
-                  <p className="font-medium mb-1">Aucun produit à afficher</p>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Ajoutez des produits pour générer leurs QR codes de traçabilité
-                  </p>
-                  {onNavigateToProducts && (
-                    <Button onClick={onNavigateToProducts} className="gap-2">
-                      <Plus className="h-4 w-4" />
-                      Ajouter un produit
-                    </Button>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-                  {products.slice(0, 5).map((product) => (
-                    <div 
-                      key={product.id}
-                      className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="p-2 bg-white rounded-lg border">
-                        <QRCodeSVG
-                          value={generateProductQRUrl(product.id)}
-                          size={48}
-                          level="M"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate">{product.name}</p>
-                        <p className="text-xs text-muted-foreground">{product.category}</p>
-                      </div>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-md">
-                          <DialogHeader>
-                            <DialogTitle>Parcours Produit</DialogTitle>
-                          </DialogHeader>
-                          <div className="space-y-4">
-                            {/* QR Code Large - Same URL as Marketplace */}
-                            <div className="flex justify-center p-4 bg-white rounded-xl border">
-                              <QRCodeSVG
-                                value={generateProductQRUrl(product.id)}
-                                size={180}
-                                level="H"
-                                includeMargin
-                              />
-                            </div>
-                            <p className="text-xs text-center text-muted-foreground">
-                              Scannez pour vérifier sur sunumarket.sn/verify/{product.id.slice(0, 8)}...
-                            </p>
-                            
-                            {/* Product Info */}
-                            <div className="text-center">
-                              <h3 className="font-semibold text-lg">{product.name}</h3>
-                              <p className="text-sm text-muted-foreground">
-                                {sellerDetails?.business_name} • {product.origin_region || sellerDetails?.region}
-                              </p>
-                              {product.is_certified && (
-                                <Badge className="mt-2 bg-secondary text-secondary-foreground">
-                                  <ShieldCheck className="h-3 w-3 mr-1" />
-                                  Certifié SunuMark
-                                </Badge>
-                              )}
-                            </div>
-
-                            {/* Journey Steps */}
-                            <div className="space-y-2">
-                              <p className="text-sm font-medium text-muted-foreground">Parcours du produit</p>
-                              <div className="relative">
-                                {PRODUCT_JOURNEY_STEPS.map((step, index) => (
-                                  <div key={step.id} className="flex items-center gap-3 py-2">
-                                    <div className={`p-2 rounded-full ${
-                                      index <= 2 ? 'bg-green-500/20 text-green-600' : 'bg-muted text-muted-foreground'
-                                    }`}>
-                                      <step.icon className="h-4 w-4" />
-                                    </div>
-                                    <div className="flex-1">
-                                      <p className="text-sm font-medium">{step.label}</p>
-                                      <p className="text-xs text-muted-foreground">{step.description}</p>
-                                    </div>
-                                    {index <= 2 && (
-                                      <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-
-                            <Button className="w-full" variant="outline">
-                              <Download className="h-4 w-4 mr-2" />
-                              Télécharger QR Code
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
-      </div>
+      {/* Regional Statistics Table - BELOW QR codes */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-secondary" />
+            Statistiques {isGlobalView ? "Nationales" : "Régionales"}
+          </CardTitle>
+          <CardDescription>
+            {isGlobalView 
+              ? "Distribution des artisans sur le territoire"
+              : "Réseau national des artisans Made in Senegal"
+            }
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RegionalStatsTable 
+            regionsData={regionsData}
+            selectedRegion={selectedRegion}
+            onRegionClick={(id) => setSelectedRegion(selectedRegion === id ? null : id)}
+            isGlobalView={isGlobalView}
+          />
+        </CardContent>
+      </Card>
 
       {/* Impact Certificate */}
       <Card className="bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5 border-secondary/30">
