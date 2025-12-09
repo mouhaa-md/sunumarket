@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import SenegalMap from "./SenegalMap";
+import RegionalStatsTable from "./RegionalStatsTable";
 
 interface Product {
   id: string;
@@ -159,12 +159,12 @@ const TraceabilityModule = ({
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Interactive Senegal Map */}
+        {/* Regional Statistics Table */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="h-5 w-5 text-secondary" />
-              Cartographie {isGlobalView ? "Nationale" : "des Producteurs"}
+              Statistiques {isGlobalView ? "Nationales" : "Régionales"}
             </CardTitle>
             <CardDescription>
               {isGlobalView 
@@ -174,26 +174,12 @@ const TraceabilityModule = ({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <SenegalMap 
+            <RegionalStatsTable 
               regionsData={regionsData}
               selectedRegion={selectedRegion}
               onRegionClick={(id) => setSelectedRegion(selectedRegion === id ? null : id)}
-              highlightedRegion={!isGlobalView ? sellerDetails?.region : undefined}
+              isGlobalView={isGlobalView}
             />
-
-            {/* Region Stats */}
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <div className="text-center p-2 rounded-lg bg-muted/50">
-                <p className="text-xl font-bold text-primary">14</p>
-                <p className="text-xs text-muted-foreground">Régions couvertes</p>
-              </div>
-              <div className="text-center p-2 rounded-lg bg-muted/50">
-                <p className="text-xl font-bold text-secondary">{totalProducers.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">
-                  {isGlobalView ? "Vendeurs enregistrés" : "Producteurs total"}
-                </p>
-              </div>
-            </div>
           </CardContent>
         </Card>
 
