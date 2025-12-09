@@ -474,7 +474,7 @@ const handleDownloadCertificate = (
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(9);
   doc.text("SunuMarket - Plateforme Officielle Made in Senegal", pageWidth / 2, 280, { align: "center" });
-  doc.text("Ministère du Commerce et de l'Industrie du Sénégal", pageWidth / 2, 288, { align: "center" });
+  doc.text("Ministère de l'Industrie et du Commerce du Sénégal", pageWidth / 2, 288, { align: "center" });
   
   // Save
   const fileName = isGlobalView 

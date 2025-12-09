@@ -368,7 +368,7 @@ const AgentDashboard = () => {
               <Building2 className="h-8 w-8" />
               <div>
                 <h1 className="text-2xl font-bold">
-                  Portail Ministère du Commerce et de l'Industrie
+                  Portail Ministère de l'Industrie et du Commerce
                 </h1>
                 <p className="text-primary-foreground/80">Vision 2050 - Made in Senegal</p>
               </div>
