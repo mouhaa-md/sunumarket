@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Upload, X, ImageIcon, QrCode } from "lucide-react";
+import { Upload, X, ImageIcon, QrCode, Trash2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -287,6 +287,31 @@ const SellerDashboard = () => {
     fetchData();
   };
 
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) return;
+
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("id", productId)
+      .eq("seller_id", user?.id);
+
+    if (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer le produit",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Produit supprimé",
+      description: "Le produit a été supprimé de votre catalogue",
+    });
+    fetchData();
+  };
+
   // Calculate stats
   const totalRevenue = orders
     .filter(o => o.status === "livree")
@@ -340,12 +365,6 @@ const SellerDashboard = () => {
                 )}
               </p>
             </div>
-            {sellerDetails?.validation_status === "en_attente" && (
-              <Badge variant="outline" className="border-yellow-500 text-yellow-600">
-                <AlertCircle className="h-4 w-4 mr-1" />
-                Validation en attente
-              </Badge>
-            )}
           </div>
 
           <div className="flex flex-col lg:flex-row gap-8">
@@ -631,11 +650,21 @@ const SellerDashboard = () => {
                                 {product.category} • Stock: {product.stock}
                               </p>
                             </div>
-                            <div className="text-right">
-                              <p className="font-bold">{product.price?.toLocaleString()} FCFA</p>
-                              {product.is_certified && (
-                                <Badge className="bg-green-500 mt-1">Certifié</Badge>
-                              )}
+                            <div className="flex items-center gap-4">
+                              <div className="text-right">
+                                <p className="font-bold">{product.price?.toLocaleString()} FCFA</p>
+                                {product.is_certified && (
+                                  <Badge className="bg-green-500 mt-1">Certifié</Badge>
+                                )}
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                onClick={() => handleDeleteProduct(product.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
                             </div>
                           </div>
                         ))}
