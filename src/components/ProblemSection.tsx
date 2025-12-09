@@ -62,7 +62,7 @@ const ProblemSection = () => {
 
       <div className="mt-12 p-6 bg-card rounded-lg border-2 border-destructive/30 text-center">
         <p className="text-lg font-medium text-foreground">
-          <span className="gradient-text font-bold">75%</span> des PME sénégalaises n'ont pas de présence en ligne efficace
+          <span className="gradient-text font-bold">70%</span> des PME sénégalaises n'ont pas de présence en ligne efficace
         </p>
       </div>
     </section>
