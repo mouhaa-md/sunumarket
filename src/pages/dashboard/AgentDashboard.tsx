@@ -57,6 +57,7 @@ const AgentDashboard = () => {
   const [agentDetails, setAgentDetails] = useState<any>(null);
   const [pendingSellers, setPendingSellers] = useState<any[]>([]);
   const [pendingCertifications, setPendingCertifications] = useState<any[]>([]);
+  const [processedCertifications, setProcessedCertifications] = useState<any[]>([]);
   const [allSellers, setAllSellers] = useState<any[]>([]);
   const [allOrders, setAllOrders] = useState<any[]>([]);
   const [allProducts, setAllProducts] = useState<any[]>([]);
@@ -107,9 +108,15 @@ const AgentDashboard = () => {
       .select("*")
       .eq("status", "en_attente");
     
-    if (certData) {
-      // Fetch seller details for each certification
-      const enrichedCerts = await Promise.all(certData.map(async (cert) => {
+    // Fetch processed certifications (approved or rejected)
+    const { data: processedCertData } = await supabase
+      .from("certifications")
+      .select("*")
+      .in("status", ["approuvee", "refusee"])
+      .order("review_date", { ascending: false });
+    
+    const enrichCertifications = async (certs: any[]) => {
+      return Promise.all(certs.map(async (cert) => {
         const { data: sellerData } = await supabase
           .from("seller_details")
           .select("id, business_name, user_id, region")
@@ -128,7 +135,16 @@ const AgentDashboard = () => {
           profiles: profileData,
         };
       }));
+    };
+    
+    if (certData) {
+      const enrichedCerts = await enrichCertifications(certData);
       setPendingCertifications(enrichedCerts);
+    }
+    
+    if (processedCertData) {
+      const enrichedProcessed = await enrichCertifications(processedCertData);
+      setProcessedCertifications(enrichedProcessed);
     }
 
     // Fetch all orders for stats
@@ -400,7 +416,7 @@ const AgentDashboard = () => {
               {activeTab === "accueil" && (
                 <>
                   {/* Stats Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     <Card>
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
@@ -409,6 +425,17 @@ const AgentDashboard = () => {
                             <p className="text-2xl font-bold">{validatedSellers}</p>
                           </div>
                           <Users className="h-8 w-8 text-green-500" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Vendeurs certifiés</p>
+                            <p className="text-2xl font-bold text-secondary">{allSellers.filter(s => s.is_certified).length}</p>
+                          </div>
+                          <Award className="h-8 w-8 text-secondary" />
                         </div>
                       </CardContent>
                     </Card>
@@ -427,10 +454,10 @@ const AgentDashboard = () => {
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm text-muted-foreground">Certifications</p>
+                            <p className="text-sm text-muted-foreground">Cert. en attente</p>
                             <p className="text-2xl font-bold">{pendingCertifications.length}</p>
                           </div>
-                          <Award className="h-8 w-8 text-secondary" />
+                          <Award className="h-8 w-8 text-orange-500" />
                         </div>
                       </CardContent>
                     </Card>
@@ -559,78 +586,155 @@ const AgentDashboard = () => {
               )}
 
               {activeTab === "certifications" && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Award className="h-5 w-5 text-secondary" />
-                      Demandes de certification SunuMark
-                      {pendingCertifications.length > 0 && (
-                        <Badge className="ml-2">{pendingCertifications.length} en attente</Badge>
+                <div className="space-y-6">
+                  {/* Pending Certifications */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Award className="h-5 w-5 text-secondary" />
+                        Demandes en attente
+                        {pendingCertifications.length > 0 && (
+                          <Badge className="ml-2 bg-orange-500">{pendingCertifications.length}</Badge>
+                        )}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {pendingCertifications.length === 0 ? (
+                        <p className="text-muted-foreground text-center py-8">
+                          Aucune demande de certification en attente
+                        </p>
+                      ) : (
+                        <div className="space-y-4">
+                          {pendingCertifications.map((cert) => (
+                            <div
+                              key={cert.id}
+                              className="p-4 border rounded-lg space-y-3"
+                            >
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <p className="font-bold text-lg">
+                                    {(cert as any).seller_details?.business_name || "Entreprise"}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">
+                                    {(cert as any).profiles?.full_name} • {(cert as any).profiles?.email}
+                                  </p>
+                                </div>
+                                <Badge variant="outline" className="border-yellow-500 text-yellow-600">
+                                  En attente
+                                </Badge>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-sm">
+                                <div>
+                                  <span className="text-muted-foreground">Région:</span>{" "}
+                                  {getRegionLabel((cert as any).seller_details?.region)}
+                                </div>
+                                <div>
+                                  <span className="text-muted-foreground">Date demande:</span>{" "}
+                                  {new Date(cert.created_at).toLocaleDateString("fr-FR")}
+                                </div>
+                              </div>
+                              <div className="flex gap-2 pt-2 border-t">
+                                <Button 
+                                  size="sm" 
+                                  className="bg-green-600 hover:bg-green-700"
+                                  onClick={() => handleApproveCertification(cert)}
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Approuver et certifier
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="destructive"
+                                  onClick={() => {
+                                    setSelectedCertification(cert);
+                                    setIsCertRejectDialogOpen(true);
+                                  }}
+                                >
+                                  <XCircle className="h-4 w-4 mr-1" />
+                                  Refuser
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       )}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {pendingCertifications.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-8">
-                        Aucune demande de certification en attente
-                      </p>
-                    ) : (
-                      <div className="space-y-4">
-                        {pendingCertifications.map((cert) => (
-                          <div
-                            key={cert.id}
-                            className="p-4 border rounded-lg space-y-3"
-                          >
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <p className="font-bold text-lg">
-                                  {(cert as any).seller_details?.business_name || "Entreprise"}
+                    </CardContent>
+                  </Card>
+
+                  {/* Certification History */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <BarChart3 className="h-5 w-5 text-secondary" />
+                        Historique des certifications
+                        <Badge className="ml-2 bg-green-500">
+                          {processedCertifications.filter(c => c.status === "approuvee").length} approuvées
+                        </Badge>
+                        <Badge className="ml-1 bg-red-500">
+                          {processedCertifications.filter(c => c.status === "refusee").length} refusées
+                        </Badge>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {processedCertifications.length === 0 ? (
+                        <p className="text-muted-foreground text-center py-8">
+                          Aucune certification traitée
+                        </p>
+                      ) : (
+                        <div className="space-y-3">
+                          {processedCertifications.map((cert) => (
+                            <div
+                              key={cert.id}
+                              className={`p-4 border rounded-lg flex items-center justify-between ${
+                                cert.status === "approuvee" 
+                                  ? "border-green-200 bg-green-50 dark:bg-green-900/10" 
+                                  : "border-red-200 bg-red-50 dark:bg-red-900/10"
+                              }`}
+                            >
+                              <div className="flex items-center gap-4">
+                                {cert.status === "approuvee" ? (
+                                  <CheckCircle className="h-6 w-6 text-green-600" />
+                                ) : (
+                                  <XCircle className="h-6 w-6 text-red-600" />
+                                )}
+                                <div>
+                                  <p className="font-bold">
+                                    {(cert as any).seller_details?.business_name || "Entreprise"}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">
+                                    {(cert as any).profiles?.full_name} • {getRegionLabel((cert as any).seller_details?.region)}
+                                  </p>
+                                  {cert.status === "refusee" && cert.rejection_reason && (
+                                    <p className="text-xs text-red-600 mt-1">
+                                      Motif: {cert.rejection_reason}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <Badge className={cert.status === "approuvee" ? "bg-green-500" : "bg-red-500"}>
+                                  {cert.status === "approuvee" ? "Approuvée" : "Refusée"}
+                                </Badge>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {cert.review_date 
+                                    ? new Date(cert.review_date).toLocaleDateString("fr-FR", {
+                                        day: "numeric",
+                                        month: "short",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit"
+                                      })
+                                    : "-"
+                                  }
                                 </p>
-                                <p className="text-sm text-muted-foreground">
-                                  {(cert as any).profiles?.full_name} • {(cert as any).profiles?.email}
-                                </p>
-                              </div>
-                              <Badge variant="outline" className="border-yellow-500 text-yellow-600">
-                                En attente
-                              </Badge>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 text-sm">
-                              <div>
-                                <span className="text-muted-foreground">Région:</span>{" "}
-                                {getRegionLabel((cert as any).seller_details?.region)}
-                              </div>
-                              <div>
-                                <span className="text-muted-foreground">Date demande:</span>{" "}
-                                {new Date(cert.created_at).toLocaleDateString("fr-FR")}
                               </div>
                             </div>
-                            <div className="flex gap-2 pt-2 border-t">
-                              <Button 
-                                size="sm" 
-                                className="bg-green-600 hover:bg-green-700"
-                                onClick={() => handleApproveCertification(cert)}
-                              >
-                                <CheckCircle className="h-4 w-4 mr-1" />
-                                Approuver et certifier
-                              </Button>
-                              <Button 
-                                size="sm" 
-                                variant="destructive"
-                                onClick={() => {
-                                  setSelectedCertification(cert);
-                                  setIsCertRejectDialogOpen(true);
-                                }}
-                              >
-                                <XCircle className="h-4 w-4 mr-1" />
-                                Refuser
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
               )}
 
               {activeTab === "statistiques" && (
