@@ -15,105 +15,105 @@ interface SenegalMapProps {
   highlightedRegion?: string | null;
 }
 
-// Senegal regions with accurate SVG paths based on real geography
+// Accurate SVG paths for Senegal regions based on actual geography
 const SENEGAL_REGIONS_MAP = [
   { 
     id: "saint_louis", 
     name: "Saint-Louis", 
-    path: "M90,10 L180,5 L220,15 L250,10 L260,25 L240,50 L200,55 L160,70 L120,65 L100,55 L85,40 Z",
-    cx: 170, cy: 35,
-    defaultColor: "#8B5CF6" // Purple
+    path: "M95 25 L130 15 L175 12 L210 18 L230 35 L215 65 L175 75 L140 80 L110 72 L90 55 L80 40 Z",
+    cx: 155, cy: 45,
+    defaultColor: "#8B5CF6"
   },
   { 
     id: "matam", 
     name: "Matam", 
-    path: "M260,25 L320,15 L370,25 L380,50 L370,90 L340,110 L300,100 L260,85 L240,50 Z",
-    cx: 310, cy: 60,
-    defaultColor: "#0EA5E9" // Blue
+    path: "M230 35 L275 25 L320 30 L345 50 L335 90 L305 105 L265 95 L235 80 L215 65 Z",
+    cx: 280, cy: 65,
+    defaultColor: "#0EA5E9"
   },
   { 
     id: "louga", 
     name: "Louga", 
-    path: "M85,40 L100,55 L120,65 L160,70 L150,100 L120,110 L80,100 L60,70 Z",
-    cx: 110, cy: 80,
-    defaultColor: "#7C3AED" // Dark purple
+    path: "M65 55 L90 55 L110 72 L140 80 L130 115 L95 120 L65 105 L55 75 Z",
+    cx: 95, cy: 90,
+    defaultColor: "#7C3AED"
   },
   { 
     id: "dakar", 
     name: "Dakar", 
-    path: "M25,95 L40,90 L50,100 L45,115 L30,115 L20,105 Z",
-    cx: 35, cy: 102,
-    defaultColor: "#EF4444" // Red
+    path: "M18 105 L35 95 L48 100 L50 115 L42 125 L25 122 L15 112 Z",
+    cx: 33, cy: 110,
+    defaultColor: "#EF4444"
   },
   { 
     id: "thies", 
     name: "Thiès", 
-    path: "M40,90 L60,70 L80,100 L85,120 L70,135 L50,130 L45,115 L50,100 Z",
-    cx: 65, cy: 105,
-    defaultColor: "#22C55E" // Green
+    path: "M35 95 L55 75 L65 105 L72 130 L55 145 L42 140 L42 125 L50 115 L48 100 Z",
+    cx: 55, cy: 115,
+    defaultColor: "#22C55E"
   },
   { 
     id: "diourbel", 
     name: "Diourbel", 
-    path: "M80,100 L120,110 L130,130 L110,145 L85,140 L85,120 Z",
-    cx: 105, cy: 125,
-    defaultColor: "#3B82F6" // Blue
+    path: "M65 105 L95 120 L105 140 L85 155 L72 150 L72 130 Z",
+    cx: 85, cy: 132,
+    defaultColor: "#3B82F6"
   },
   { 
     id: "fatick", 
     name: "Fatick", 
-    path: "M50,130 L70,135 L85,140 L90,165 L70,180 L45,175 L40,150 Z",
-    cx: 65, cy: 155,
-    defaultColor: "#A855F7" // Purple/Magenta
+    path: "M42 140 L55 145 L72 150 L75 175 L55 190 L35 185 L30 160 Z",
+    cx: 52, cy: 165,
+    defaultColor: "#A855F7"
   },
   { 
     id: "kaolack", 
     name: "Kaolack", 
-    path: "M85,140 L110,145 L130,160 L120,185 L90,180 L90,165 Z",
-    cx: 108, cy: 165,
-    defaultColor: "#EC4899" // Pink
+    path: "M72 150 L85 155 L105 140 L120 155 L110 180 L85 185 L75 175 Z",
+    cx: 95, cy: 165,
+    defaultColor: "#EC4899"
   },
   { 
     id: "kaffrine", 
     name: "Kaffrine", 
-    path: "M130,130 L180,125 L200,150 L190,180 L150,185 L130,160 Z",
-    cx: 165, cy: 155,
-    defaultColor: "#10B981" // Green
+    path: "M105 140 L150 130 L175 150 L165 180 L130 190 L110 180 L120 155 Z",
+    cx: 140, cy: 160,
+    defaultColor: "#10B981"
   },
   { 
     id: "tambacounda", 
     name: "Tambacounda", 
-    path: "M200,55 L260,85 L300,100 L340,110 L350,150 L340,190 L300,210 L250,200 L200,190 L190,180 L200,150 L180,125 L150,100 L160,70 Z",
-    cx: 260, cy: 145,
-    defaultColor: "#92400E" // Brown
+    path: "M175 75 L215 65 L235 80 L265 95 L305 105 L320 140 L310 180 L275 200 L230 195 L190 185 L165 180 L175 150 L150 130 L140 80 Z",
+    cx: 235, cy: 140,
+    defaultColor: "#92400E"
   },
   { 
     id: "kedougou", 
     name: "Kédougou", 
-    path: "M300,210 L340,190 L370,200 L380,240 L350,270 L300,260 L280,230 Z",
-    cx: 335, cy: 235,
-    defaultColor: "#FACC15" // Yellow
+    path: "M275 200 L310 180 L340 190 L355 220 L340 255 L300 250 L270 230 Z",
+    cx: 310, cy: 220,
+    defaultColor: "#FACC15"
   },
   { 
     id: "kolda", 
     name: "Kolda", 
-    path: "M180,230 L250,200 L300,210 L280,230 L300,260 L260,280 L200,280 L170,260 Z",
-    cx: 235, cy: 250,
-    defaultColor: "#A16207" // Brown/Tan
+    path: "M160 235 L210 220 L270 230 L300 250 L275 275 L220 280 L175 270 L150 250 Z",
+    cx: 220, cy: 252,
+    defaultColor: "#78716C"
   },
   { 
     id: "sedhiou", 
     name: "Sédhiou", 
-    path: "M100,250 L140,240 L170,260 L160,285 L120,295 L90,280 Z",
-    cx: 130, cy: 270,
-    defaultColor: "#16A34A" // Green
+    path: "M90 250 L130 240 L150 250 L145 275 L115 285 L85 275 Z",
+    cx: 118, cy: 262,
+    defaultColor: "#16A34A"
   },
   { 
     id: "ziguinchor", 
     name: "Ziguinchor", 
-    path: "M30,260 L80,250 L100,250 L90,280 L70,300 L35,295 L20,275 Z",
-    cx: 60, cy: 275,
-    defaultColor: "#DB2777" // Magenta/Pink
+    path: "M25 255 L70 245 L90 250 L85 275 L60 290 L30 285 L15 270 Z",
+    cx: 55, cy: 268,
+    defaultColor: "#DB2777"
   },
 ];
 
@@ -134,7 +134,7 @@ const SenegalMap = ({ regionsData = [], onRegionClick, selectedRegion, highlight
       return "hsl(var(--secondary))";
     }
     if (isHovered) {
-      return `${region.defaultColor}CC`; // Add transparency on hover
+      return `${region.defaultColor}DD`;
     }
     
     return region.defaultColor;
@@ -147,24 +147,37 @@ const SenegalMap = ({ regionsData = [], onRegionClick, selectedRegion, highlight
   return (
     <div className="relative">
       <svg 
-        viewBox="0 0 400 320" 
+        viewBox="0 0 370 310" 
         className="w-full h-auto"
-        style={{ maxHeight: "350px" }}
+        style={{ maxHeight: "320px" }}
       >
-        {/* Background */}
-        <rect x="0" y="0" width="400" height="320" fill="hsl(var(--muted) / 0.2)" rx="8" />
+        {/* Background with subtle gradient */}
+        <defs>
+          <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="hsl(210 100% 95%)" />
+            <stop offset="100%" stopColor="hsl(210 50% 90%)" />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="370" height="310" fill="url(#bgGradient)" rx="12" />
         
-        {/* Ocean/Atlantic effect on the left */}
-        <ellipse cx="-20" cy="180" rx="60" ry="150" fill="hsl(210 100% 50% / 0.08)" />
+        {/* Atlantic Ocean indication */}
+        <text x="8" y="200" fontSize="10" fill="hsl(210 80% 60%)" fontStyle="italic" opacity="0.7">
+          Océan
+        </text>
+        <text x="8" y="212" fontSize="10" fill="hsl(210 80% 60%)" fontStyle="italic" opacity="0.7">
+          Atlantique
+        </text>
         
-        {/* Gambia river gap effect */}
+        {/* Gambia gap - white separation */}
         <path
-          d="M30,220 Q80,215 130,220 Q160,225 180,230"
-          fill="none"
-          stroke="hsl(var(--background))"
-          strokeWidth="8"
-          strokeLinecap="round"
+          d="M25 210 Q70 205 120 210 Q150 215 175 220 L175 230 Q150 225 120 220 Q70 215 25 220 Z"
+          fill="hsl(var(--background))"
+          stroke="hsl(210 50% 80%)"
+          strokeWidth="1"
         />
+        <text x="80" y="218" fontSize="8" fill="hsl(210 50% 50%)" fontStyle="italic">
+          Gambie
+        </text>
 
         {/* Regions */}
         {SENEGAL_REGIONS_MAP.map((region) => (
@@ -172,17 +185,13 @@ const SenegalMap = ({ regionsData = [], onRegionClick, selectedRegion, highlight
             <path
               d={region.path}
               fill={getRegionColor(region)}
-              stroke="hsl(var(--background))"
-              strokeWidth="2"
-              className="cursor-pointer transition-all duration-300"
+              stroke="white"
+              strokeWidth="1.5"
+              className="cursor-pointer transition-all duration-200"
               style={{
                 filter: (hoveredRegion === region.id || selectedRegion === region.id) 
-                  ? "brightness(1.1) drop-shadow(0 4px 6px rgba(0,0,0,0.3))" 
-                  : "none",
-                transform: (hoveredRegion === region.id || selectedRegion === region.id) 
-                  ? "scale(1.02)" 
-                  : "scale(1)",
-                transformOrigin: `${region.cx}px ${region.cy}px`
+                  ? "brightness(1.15) drop-shadow(0 3px 6px rgba(0,0,0,0.25))" 
+                  : "drop-shadow(0 1px 2px rgba(0,0,0,0.1))"
               }}
               onMouseEnter={() => setHoveredRegion(region.id)}
               onMouseLeave={() => setHoveredRegion(null)}
@@ -194,27 +203,26 @@ const SenegalMap = ({ regionsData = [], onRegionClick, selectedRegion, highlight
               y={region.cy}
               textAnchor="middle"
               dominantBaseline="middle"
-              fontSize={region.id === "dakar" ? "6" : "8"}
+              fontSize={region.id === "dakar" ? "5" : region.id === "tambacounda" ? "9" : "7"}
               fontWeight="600"
               fill="white"
               className="pointer-events-none select-none"
-              style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
+              style={{ textShadow: "0 1px 2px rgba(0,0,0,0.6)" }}
             >
               {region.name}
             </text>
           </g>
         ))}
-        
-        {/* Legend */}
-        <g transform="translate(300, 290)">
-          <rect x="0" y="0" width="90" height="25" fill="hsl(var(--background) / 0.8)" rx="4" />
-          <text x="10" y="16" fontSize="9" fill="hsl(var(--foreground))">14 régions</text>
-        </g>
+
+        {/* Title */}
+        <text x="185" y="300" textAnchor="middle" fontSize="11" fontWeight="600" fill="hsl(var(--foreground))">
+          Carte du Sénégal - 14 Régions
+        </text>
       </svg>
 
       {/* Region Info Tooltip */}
       {activeRegion && activeRegionData && (
-        <div className="absolute bottom-2 left-2 right-2 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <div className="absolute bottom-0 left-2 right-2 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="font-semibold text-lg">{activeRegionData.name}</p>
@@ -223,9 +231,8 @@ const SenegalMap = ({ regionsData = [], onRegionClick, selectedRegion, highlight
               </p>
             </div>
             <Badge 
-              variant="secondary" 
-              className="gap-1"
-              style={{ backgroundColor: activeRegionData.defaultColor, color: "white" }}
+              className="gap-1 text-white"
+              style={{ backgroundColor: activeRegionData.defaultColor }}
             >
               <MapPin className="h-3 w-3" />
               {activeProducers > 0 ? "Active" : "En développement"}
