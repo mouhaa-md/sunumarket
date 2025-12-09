@@ -32,6 +32,7 @@ interface SignUpData {
   region?: string;
   activitySector?: string;
   ninea?: string;
+  employeesCount?: number;
   // Agent specific
   accessCode?: string;
   matricule?: string;
@@ -160,6 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         region: data.region || "dakar",
         activity_sector: data.activitySector || "artisanat",
         ninea: data.ninea || null,
+        employees_count: data.employeesCount || 1,
       } as any);
       if (error) console.error("Error inserting seller details:", error);
     } else if (data.role === "agent") {

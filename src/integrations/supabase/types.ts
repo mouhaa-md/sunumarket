@@ -440,6 +440,7 @@ export type Database = {
           business_name: string
           business_type: Database["public"]["Enums"]["business_type"]
           created_at: string
+          employees_count: number
           id: string
           is_certified: boolean | null
           ninea: string | null
@@ -457,6 +458,7 @@ export type Database = {
           business_name: string
           business_type: Database["public"]["Enums"]["business_type"]
           created_at?: string
+          employees_count?: number
           id?: string
           is_certified?: boolean | null
           ninea?: string | null
@@ -474,6 +476,7 @@ export type Database = {
           business_name?: string
           business_type?: Database["public"]["Enums"]["business_type"]
           created_at?: string
+          employees_count?: number
           id?: string
           is_certified?: boolean | null
           ninea?: string | null
