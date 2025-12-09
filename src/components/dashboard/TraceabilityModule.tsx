@@ -15,12 +15,11 @@ import {
   Store,
   Eye,
   Download,
-  Leaf,
-  Heart,
   Plus
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import SenegalMap from "./SenegalMap";
 
 interface Product {
   id: string;
@@ -40,24 +39,32 @@ interface TraceabilityModuleProps {
     is_certified?: boolean;
   } | null;
   onNavigateToProducts?: () => void;
+  isGlobalView?: boolean;
+  globalStats?: {
+    totalSellers: number;
+    certifiedSellers: number;
+    totalProducts: number;
+    totalRevenue: number;
+    sellersByRegion: { id: string; name: string; count: number }[];
+  };
 }
 
-// Senegal regions with coordinates for the map
-const SENEGAL_REGIONS = [
-  { id: "dakar", name: "Dakar", x: 15, y: 45, producers: 245, color: "hsl(var(--secondary))" },
-  { id: "thies", name: "Thiès", x: 25, y: 42, producers: 189, color: "hsl(var(--primary))" },
-  { id: "saint_louis", name: "Saint-Louis", x: 30, y: 15, producers: 134, color: "hsl(var(--accent))" },
-  { id: "diourbel", name: "Diourbel", x: 35, y: 45, producers: 98, color: "hsl(var(--secondary))" },
-  { id: "fatick", name: "Fatick", x: 32, y: 55, producers: 87, color: "hsl(var(--primary))" },
-  { id: "kaolack", name: "Kaolack", x: 40, y: 55, producers: 156, color: "hsl(var(--accent))" },
-  { id: "louga", name: "Louga", x: 35, y: 25, producers: 76, color: "hsl(var(--secondary))" },
-  { id: "matam", name: "Matam", x: 55, y: 20, producers: 45, color: "hsl(var(--primary))" },
-  { id: "tambacounda", name: "Tambacounda", x: 65, y: 45, producers: 67, color: "hsl(var(--accent))" },
-  { id: "kedougou", name: "Kédougou", x: 75, y: 55, producers: 34, color: "hsl(var(--secondary))" },
-  { id: "kolda", name: "Kolda", x: 60, y: 65, producers: 89, color: "hsl(var(--primary))" },
-  { id: "sedhiou", name: "Sédhiou", x: 50, y: 68, producers: 56, color: "hsl(var(--accent))" },
-  { id: "ziguinchor", name: "Ziguinchor", x: 40, y: 72, producers: 123, color: "hsl(var(--secondary))" },
-  { id: "kaffrine", name: "Kaffrine", x: 48, y: 48, producers: 78, color: "hsl(var(--primary))" },
+// Default region data for sellers
+const DEFAULT_REGIONS_DATA = [
+  { id: "dakar", name: "Dakar", producers: 245 },
+  { id: "thies", name: "Thiès", producers: 189 },
+  { id: "saint_louis", name: "Saint-Louis", producers: 134 },
+  { id: "diourbel", name: "Diourbel", producers: 98 },
+  { id: "fatick", name: "Fatick", producers: 87 },
+  { id: "kaolack", name: "Kaolack", producers: 156 },
+  { id: "louga", name: "Louga", producers: 76 },
+  { id: "matam", name: "Matam", producers: 45 },
+  { id: "tambacounda", name: "Tambacounda", producers: 67 },
+  { id: "kedougou", name: "Kédougou", producers: 34 },
+  { id: "kolda", name: "Kolda", producers: 89 },
+  { id: "sedhiou", name: "Sédhiou", producers: 56 },
+  { id: "ziguinchor", name: "Ziguinchor", producers: 123 },
+  { id: "kaffrine", name: "Kaffrine", producers: 78 },
 ];
 
 const PRODUCT_JOURNEY_STEPS = [
@@ -73,22 +80,39 @@ const generateProductQRUrl = (productId: string) => {
   return `https://sunumarket.sn/verify/${productId}`;
 };
 
-const TraceabilityModule = ({ products, sellerDetails, onNavigateToProducts }: TraceabilityModuleProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+const TraceabilityModule = ({ 
+  products, 
+  sellerDetails, 
+  onNavigateToProducts,
+  isGlobalView = false,
+  globalStats
+}: TraceabilityModuleProps) => {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
   // Calculate impact scores
-  const totalProducts = products.length;
-  const certifiedProducts = products.filter(p => p.is_certified).length;
+  const totalProducts = isGlobalView ? (globalStats?.totalProducts || 0) : products.length;
+  const certifiedProducts = isGlobalView 
+    ? (globalStats?.certifiedSellers || 0) 
+    : products.filter(p => p.is_certified).length;
   
-  const impactMetrics = {
+  const impactMetrics = isGlobalView ? {
+    jobsCreated: globalStats?.totalSellers ? globalStats.totalSellers * 3 : 0,
+    localEconomy: globalStats?.totalRevenue || 0,
+  } : {
     jobsCreated: Math.max(2, Math.floor(totalProducts * 1.5)),
     localEconomy: totalProducts * 75000,
-    co2Saved: totalProducts * 12,
-    familiesSupported: Math.max(1, Math.floor(totalProducts * 0.8)),
   };
 
-  // No longer needed - using generateProductQRUrl instead
+  // Region data for the map
+  const regionsData = isGlobalView && globalStats?.sellersByRegion
+    ? globalStats.sellersByRegion.map(r => ({
+        id: r.id,
+        name: r.name,
+        producers: r.count
+      }))
+    : DEFAULT_REGIONS_DATA;
+
+  const totalProducers = regionsData.reduce((sum, r) => sum + r.producers, 0);
 
   return (
     <div className="space-y-6">
@@ -99,112 +123,63 @@ const TraceabilityModule = ({ products, sellerDetails, onNavigateToProducts }: T
         </div>
         <div>
           <h2 className="text-2xl font-bold">Traçabilité & Transparence</h2>
-          <p className="text-muted-foreground">Suivez le parcours de vos produits et mesurez votre impact</p>
+          <p className="text-muted-foreground">
+            {isGlobalView 
+              ? "Vue nationale du réseau Made in Senegal"
+              : "Suivez le parcours de vos produits et mesurez votre impact"
+            }
+          </p>
         </div>
       </div>
 
-      {/* Impact Score Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Impact Score Cards - Only 2 metrics now */}
+      <div className="grid grid-cols-2 gap-4">
         <Card className="bg-gradient-to-br from-green-500/10 to-green-600/5 border-green-500/20">
           <CardContent className="p-4 text-center">
             <Users className="h-8 w-8 mx-auto mb-2 text-green-600" />
-            <p className="text-2xl font-bold text-green-600">{impactMetrics.jobsCreated}</p>
-            <p className="text-xs text-muted-foreground">Emplois créés</p>
+            <p className="text-2xl font-bold text-green-600">{impactMetrics.jobsCreated.toLocaleString()}</p>
+            <p className="text-xs text-muted-foreground">
+              {isGlobalView ? "Emplois directs" : "Emplois créés"}
+            </p>
           </CardContent>
         </Card>
         
         <Card className="bg-gradient-to-br from-secondary/10 to-secondary/5 border-secondary/20">
           <CardContent className="p-4 text-center">
             <TrendingUp className="h-8 w-8 mx-auto mb-2 text-secondary" />
-            <p className="text-2xl font-bold text-secondary">{(impactMetrics.localEconomy / 1000000).toFixed(1)}M</p>
+            <p className="text-2xl font-bold text-secondary">
+              {impactMetrics.localEconomy >= 1000000 
+                ? `${(impactMetrics.localEconomy / 1000000).toFixed(1)}M`
+                : impactMetrics.localEconomy.toLocaleString()
+              }
+            </p>
             <p className="text-xs text-muted-foreground">FCFA Économie locale</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/20">
-          <CardContent className="p-4 text-center">
-            <Leaf className="h-8 w-8 mx-auto mb-2 text-emerald-600" />
-            <p className="text-2xl font-bold text-emerald-600">{impactMetrics.co2Saved} kg</p>
-            <p className="text-xs text-muted-foreground">CO₂ économisé</p>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-rose-500/10 to-rose-600/5 border-rose-500/20">
-          <CardContent className="p-4 text-center">
-            <Heart className="h-8 w-8 mx-auto mb-2 text-rose-600" />
-            <p className="text-2xl font-bold text-rose-600">{impactMetrics.familiesSupported}</p>
-            <p className="text-xs text-muted-foreground">Familles soutenues</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Interactive Map */}
+        {/* Interactive Senegal Map */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="h-5 w-5 text-secondary" />
-              Cartographie des Producteurs
+              Cartographie {isGlobalView ? "Nationale" : "des Producteurs"}
             </CardTitle>
-            <CardDescription>Réseau national des artisans Made in Senegal</CardDescription>
+            <CardDescription>
+              {isGlobalView 
+                ? "Distribution des artisans sur le territoire"
+                : "Réseau national des artisans Made in Senegal"
+              }
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="relative bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl p-4 min-h-[300px]">
-              {/* Simplified Senegal Map */}
-              <svg viewBox="0 0 100 85" className="w-full h-64">
-                {/* Map outline */}
-                <path
-                  d="M10 45 L20 35 L35 30 L50 25 L65 30 L80 40 L85 55 L75 65 L55 70 L35 75 L20 70 L10 60 Z"
-                  fill="hsl(var(--muted))"
-                  stroke="hsl(var(--border))"
-                  strokeWidth="0.5"
-                  className="opacity-50"
-                />
-                
-                {/* Region markers */}
-                {SENEGAL_REGIONS.map((region) => (
-                  <g key={region.id}>
-                    <circle
-                      cx={region.x}
-                      cy={region.y}
-                      r={selectedRegion === region.id ? 4 : 3}
-                      fill={region.color}
-                      className="cursor-pointer transition-all duration-300 hover:opacity-80"
-                      onClick={() => setSelectedRegion(selectedRegion === region.id ? null : region.id)}
-                    />
-                    {selectedRegion === region.id && (
-                      <circle
-                        cx={region.x}
-                        cy={region.y}
-                        r={6}
-                        fill="none"
-                        stroke={region.color}
-                        strokeWidth="1"
-                        className="animate-ping"
-                      />
-                    )}
-                  </g>
-                ))}
-              </svg>
-
-              {/* Region Info Popup */}
-              {selectedRegion && (
-                <div className="absolute bottom-4 left-4 right-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-lg">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold">{SENEGAL_REGIONS.find(r => r.id === selectedRegion)?.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {SENEGAL_REGIONS.find(r => r.id === selectedRegion)?.producers} producteurs actifs
-                      </p>
-                    </div>
-                    <Badge variant="secondary">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      Active
-                    </Badge>
-                  </div>
-                </div>
-              )}
-            </div>
+            <SenegalMap 
+              regionsData={regionsData}
+              selectedRegion={selectedRegion}
+              onRegionClick={(id) => setSelectedRegion(selectedRegion === id ? null : id)}
+              highlightedRegion={!isGlobalView ? sellerDetails?.region : undefined}
+            />
 
             {/* Region Stats */}
             <div className="mt-4 grid grid-cols-2 gap-2">
@@ -213,135 +188,189 @@ const TraceabilityModule = ({ products, sellerDetails, onNavigateToProducts }: T
                 <p className="text-xs text-muted-foreground">Régions couvertes</p>
               </div>
               <div className="text-center p-2 rounded-lg bg-muted/50">
-                <p className="text-xl font-bold text-secondary">1,477</p>
-                <p className="text-xs text-muted-foreground">Producteurs total</p>
+                <p className="text-xl font-bold text-secondary">{totalProducers.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">
+                  {isGlobalView ? "Vendeurs enregistrés" : "Producteurs total"}
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Product QR Codes */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <QrCode className="h-5 w-5 text-secondary" />
-              QR Codes Produits
-            </CardTitle>
-            <CardDescription>Traçabilité complète pour vos clients</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {products.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="p-4 rounded-full bg-muted/50 w-fit mx-auto mb-4">
-                  <Package className="h-12 w-12 text-muted-foreground" />
+        {/* Product QR Codes (seller view) or Global Stats (agent view) */}
+        {isGlobalView ? (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-secondary" />
+                Statistiques Certifications
+              </CardTitle>
+              <CardDescription>État des certifications SunuMark</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-4 rounded-lg bg-primary/10 text-center">
+                  <p className="text-3xl font-bold text-primary">{globalStats?.totalSellers || 0}</p>
+                  <p className="text-xs text-muted-foreground">Vendeurs inscrits</p>
                 </div>
-                <p className="font-medium mb-1">Aucun produit à afficher</p>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Ajoutez des produits pour générer leurs QR codes de traçabilité
-                </p>
-                {onNavigateToProducts && (
-                  <Button onClick={onNavigateToProducts} className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Ajouter un produit
-                  </Button>
-                )}
+                <div className="p-4 rounded-lg bg-secondary/10 text-center">
+                  <p className="text-3xl font-bold text-secondary">{globalStats?.certifiedSellers || 0}</p>
+                  <p className="text-xs text-muted-foreground">Certifiés SunuMark</p>
+                </div>
               </div>
-            ) : (
-              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-                {products.slice(0, 5).map((product) => (
+              
+              <div className="p-4 rounded-lg border bg-muted/20">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">Taux de certification</span>
+                  <span className="text-lg font-bold text-secondary">
+                    {globalStats?.totalSellers 
+                      ? Math.round((globalStats.certifiedSellers / globalStats.totalSellers) * 100)
+                      : 0
+                    }%
+                  </span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-2">
                   <div 
-                    key={product.id}
-                    className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="p-2 bg-white rounded-lg border">
-                      <QRCodeSVG
-                        value={generateProductQRUrl(product.id)}
-                        size={48}
-                        level="M"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{product.name}</p>
-                      <p className="text-xs text-muted-foreground">{product.category}</p>
-                    </div>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => setSelectedProduct(product)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-md">
-                        <DialogHeader>
-                          <DialogTitle>Parcours Produit</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          {/* QR Code Large - Same URL as Marketplace */}
-                          <div className="flex justify-center p-4 bg-white rounded-xl border">
-                            <QRCodeSVG
-                              value={generateProductQRUrl(product.id)}
-                              size={180}
-                              level="H"
-                              includeMargin
-                            />
-                          </div>
-                          <p className="text-xs text-center text-muted-foreground">
-                            Scannez pour vérifier sur sunumarket.sn/verify/{product.id.slice(0, 8)}...
-                          </p>
-                          
-                          {/* Product Info */}
-                          <div className="text-center">
-                            <h3 className="font-semibold text-lg">{product.name}</h3>
-                            <p className="text-sm text-muted-foreground">
-                              {sellerDetails?.business_name} • {product.origin_region || sellerDetails?.region}
-                            </p>
-                            {product.is_certified && (
-                              <Badge className="mt-2 bg-secondary text-secondary-foreground">
-                                <ShieldCheck className="h-3 w-3 mr-1" />
-                                Certifié SunuMark
-                              </Badge>
-                            )}
-                          </div>
-
-                          {/* Journey Steps */}
-                          <div className="space-y-2">
-                            <p className="text-sm font-medium text-muted-foreground">Parcours du produit</p>
-                            <div className="relative">
-                              {PRODUCT_JOURNEY_STEPS.map((step, index) => (
-                                <div key={step.id} className="flex items-center gap-3 py-2">
-                                  <div className={`p-2 rounded-full ${
-                                    index <= 2 ? 'bg-green-500/20 text-green-600' : 'bg-muted text-muted-foreground'
-                                  }`}>
-                                    <step.icon className="h-4 w-4" />
-                                  </div>
-                                  <div className="flex-1">
-                                    <p className="text-sm font-medium">{step.label}</p>
-                                    <p className="text-xs text-muted-foreground">{step.description}</p>
-                                  </div>
-                                  {index <= 2 && (
-                                    <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          <Button className="w-full" variant="outline">
-                            <Download className="h-4 w-4 mr-2" />
-                            Télécharger QR Code
-                          </Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                ))}
+                    className="bg-secondary h-2 rounded-full transition-all"
+                    style={{ 
+                      width: `${globalStats?.totalSellers 
+                        ? (globalStats.certifiedSellers / globalStats.totalSellers) * 100 
+                        : 0}%` 
+                    }}
+                  />
+                </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
+
+              <div className="p-4 rounded-lg bg-gradient-to-r from-primary/5 to-secondary/5 border">
+                <div className="flex items-center gap-3">
+                  <Package className="h-8 w-8 text-primary" />
+                  <div>
+                    <p className="text-2xl font-bold">{globalStats?.totalProducts || 0}</p>
+                    <p className="text-xs text-muted-foreground">Produits sur le marketplace</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <QrCode className="h-5 w-5 text-secondary" />
+                QR Codes Produits
+              </CardTitle>
+              <CardDescription>Traçabilité complète pour vos clients</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {products.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="p-4 rounded-full bg-muted/50 w-fit mx-auto mb-4">
+                    <Package className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                  <p className="font-medium mb-1">Aucun produit à afficher</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Ajoutez des produits pour générer leurs QR codes de traçabilité
+                  </p>
+                  {onNavigateToProducts && (
+                    <Button onClick={onNavigateToProducts} className="gap-2">
+                      <Plus className="h-4 w-4" />
+                      Ajouter un produit
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                  {products.slice(0, 5).map((product) => (
+                    <div 
+                      key={product.id}
+                      className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="p-2 bg-white rounded-lg border">
+                        <QRCodeSVG
+                          value={generateProductQRUrl(product.id)}
+                          size={48}
+                          level="M"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium truncate">{product.name}</p>
+                        <p className="text-xs text-muted-foreground">{product.category}</p>
+                      </div>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Parcours Produit</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            {/* QR Code Large - Same URL as Marketplace */}
+                            <div className="flex justify-center p-4 bg-white rounded-xl border">
+                              <QRCodeSVG
+                                value={generateProductQRUrl(product.id)}
+                                size={180}
+                                level="H"
+                                includeMargin
+                              />
+                            </div>
+                            <p className="text-xs text-center text-muted-foreground">
+                              Scannez pour vérifier sur sunumarket.sn/verify/{product.id.slice(0, 8)}...
+                            </p>
+                            
+                            {/* Product Info */}
+                            <div className="text-center">
+                              <h3 className="font-semibold text-lg">{product.name}</h3>
+                              <p className="text-sm text-muted-foreground">
+                                {sellerDetails?.business_name} • {product.origin_region || sellerDetails?.region}
+                              </p>
+                              {product.is_certified && (
+                                <Badge className="mt-2 bg-secondary text-secondary-foreground">
+                                  <ShieldCheck className="h-3 w-3 mr-1" />
+                                  Certifié SunuMark
+                                </Badge>
+                              )}
+                            </div>
+
+                            {/* Journey Steps */}
+                            <div className="space-y-2">
+                              <p className="text-sm font-medium text-muted-foreground">Parcours du produit</p>
+                              <div className="relative">
+                                {PRODUCT_JOURNEY_STEPS.map((step, index) => (
+                                  <div key={step.id} className="flex items-center gap-3 py-2">
+                                    <div className={`p-2 rounded-full ${
+                                      index <= 2 ? 'bg-green-500/20 text-green-600' : 'bg-muted text-muted-foreground'
+                                    }`}>
+                                      <step.icon className="h-4 w-4" />
+                                    </div>
+                                    <div className="flex-1">
+                                      <p className="text-sm font-medium">{step.label}</p>
+                                      <p className="text-xs text-muted-foreground">{step.description}</p>
+                                    </div>
+                                    {index <= 2 && (
+                                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            <Button className="w-full" variant="outline">
+                              <Download className="h-4 w-4 mr-2" />
+                              Télécharger QR Code
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Impact Certificate */}
@@ -352,18 +381,29 @@ const TraceabilityModule = ({ products, sellerDetails, onNavigateToProducts }: T
               <ShieldCheck className="h-10 w-10 text-white" />
             </div>
             <div className="flex-1 text-center md:text-left">
-              <h3 className="text-xl font-bold mb-1">Certificat d'Impact Local</h3>
+              <h3 className="text-xl font-bold mb-1">
+                {isGlobalView ? "Bilan National Made in Senegal" : "Certificat d'Impact Local"}
+              </h3>
               <p className="text-muted-foreground mb-3">
-                Votre contribution à l'économie sénégalaise est mesurable et vérifiable
+                {isGlobalView 
+                  ? "Contribution globale à l'économie sénégalaise"
+                  : "Votre contribution à l'économie sénégalaise est mesurable et vérifiable"
+                }
               </p>
               <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-secondary">{totalProducts}</p>
+                  <p className="text-2xl font-bold text-secondary">
+                    {isGlobalView ? (globalStats?.totalProducts || 0) : totalProducts}
+                  </p>
                   <p className="text-xs text-muted-foreground">Produits tracés</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-primary">{certifiedProducts}</p>
-                  <p className="text-xs text-muted-foreground">Certifiés SunuMark</p>
+                  <p className="text-2xl font-bold text-primary">
+                    {isGlobalView ? (globalStats?.certifiedSellers || 0) : certifiedProducts}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {isGlobalView ? "Vendeurs certifiés" : "Certifiés SunuMark"}
+                  </p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-green-600">100%</p>
@@ -373,7 +413,7 @@ const TraceabilityModule = ({ products, sellerDetails, onNavigateToProducts }: T
             </div>
             <Button className="bg-secondary hover:bg-secondary/90">
               <Download className="h-4 w-4 mr-2" />
-              Télécharger Certificat
+              {isGlobalView ? "Exporter Rapport" : "Télécharger Certificat"}
             </Button>
           </div>
         </CardContent>

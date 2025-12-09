@@ -33,6 +33,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { MemberCard } from "@/components/dashboard/MemberCard";
 import { MemberVerification } from "@/components/dashboard/MemberVerification";
+import TraceabilityModule from "@/components/dashboard/TraceabilityModule";
 
 const SENEGAL_REGIONS = [
   { value: "dakar", label: "Dakar" },
@@ -58,6 +59,7 @@ const AgentDashboard = () => {
   const [pendingCertifications, setPendingCertifications] = useState<any[]>([]);
   const [allSellers, setAllSellers] = useState<any[]>([]);
   const [allOrders, setAllOrders] = useState<any[]>([]);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState("accueil");
   const [selectedSeller, setSelectedSeller] = useState<any>(null);
   const [selectedCertification, setSelectedCertification] = useState<any>(null);
@@ -135,6 +137,14 @@ const AgentDashboard = () => {
       .select("*");
     
     if (ordersData) setAllOrders(ordersData);
+
+    // Fetch all products for stats
+    const { data: productsData } = await supabase
+      .from("products")
+      .select("*")
+      .eq("is_active", true);
+    
+    if (productsData) setAllProducts(productsData);
   };
 
   const handleValidateSeller = async (sellerId: string, userId: string) => {
@@ -304,6 +314,7 @@ const AgentDashboard = () => {
     { id: "accueil", label: "Accueil Ministère", icon: Building2 },
     { id: "validation", label: "Validation vendeurs", icon: CheckCircle },
     { id: "certifications", label: "Certifications", icon: Award },
+    { id: "traceability", label: "Traçabilité Nationale", icon: MapPin },
     { id: "verification", label: "Vérification Cartes", icon: QrCode },
     { id: "member-card", label: "Ma Carte Membre", icon: CreditCard },
     { id: "statistiques", label: "Statistiques nationales", icon: BarChart3 },
@@ -311,6 +322,19 @@ const AgentDashboard = () => {
     { id: "export", label: "Export données", icon: FileDown },
     { id: "admin", label: "Administration", icon: Shield },
   ];
+
+  // Global stats for traceability module
+  const globalStats = {
+    totalSellers: allSellers.length,
+    certifiedSellers: allSellers.filter(s => s.is_certified).length,
+    totalProducts: allProducts.length,
+    totalRevenue,
+    sellersByRegion: sellersByRegion.map(r => ({
+      id: r.value,
+      name: r.label,
+      count: r.count
+    }))
+  };
 
   const getRegionLabel = (value: string) => {
     return SENEGAL_REGIONS.find(r => r.value === value)?.label || value;
@@ -710,6 +734,15 @@ const AgentDashboard = () => {
                     </div>
                   </CardContent>
                 </Card>
+              )}
+
+              {activeTab === "traceability" && (
+                <TraceabilityModule
+                  products={[]}
+                  sellerDetails={null}
+                  isGlobalView={true}
+                  globalStats={globalStats}
+                />
               )}
 
               {activeTab === "admin" && (
