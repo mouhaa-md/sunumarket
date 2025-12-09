@@ -240,7 +240,7 @@ export const FinanceModule = ({ isCertified, totalRevenue, orders, products }: F
 
       {/* Main Tabs */}
       <Tabs value={activeFinanceTab} onValueChange={setActiveFinanceTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <LineChart className="h-4 w-4" />
             Prévisions
@@ -248,10 +248,6 @@ export const FinanceModule = ({ isCertified, totalRevenue, orders, products }: F
           <TabsTrigger value="microfinance" className="flex items-center gap-2">
             <PiggyBank className="h-4 w-4" />
             Micro-financement
-          </TabsTrigger>
-          <TabsTrigger value="installments" className="flex items-center gap-2">
-            <CalendarDays className="h-4 w-4" />
-            Paiements échelonnés
           </TabsTrigger>
         </TabsList>
 
@@ -541,97 +537,6 @@ export const FinanceModule = ({ isCertified, totalRevenue, orders, products }: F
           </Card>
         </TabsContent>
 
-        {/* Installment Payments Tab */}
-        <TabsContent value="installments" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarDays className="h-5 w-5 text-secondary" />
-                Paiement en plusieurs fois
-              </CardTitle>
-              <CardDescription>
-                Offrez à vos clients la possibilité de payer en plusieurs fois
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Feature Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border rounded-lg text-center">
-                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CreditCard className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <h4 className="font-medium">3x sans frais</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Paiement en 3 fois pour commandes &gt; 30 000 FCFA
-                  </p>
-                </div>
-
-                <div className="p-4 border rounded-lg text-center">
-                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CalendarDays className="h-6 w-6 text-green-600" />
-                  </div>
-                  <h4 className="font-medium">4x ou 6x</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Options étendues pour commandes &gt; 50 000 FCFA
-                  </p>
-                </div>
-
-                <div className="p-4 border rounded-lg text-center">
-                  <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Wallet className="h-6 w-6 text-secondary" />
-                  </div>
-                  <h4 className="font-medium">Mobile Money</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Compatible Orange Money, Wave, Free Money
-                  </p>
-                </div>
-              </div>
-
-              {/* Activation Status */}
-              <div className="p-4 bg-gradient-to-r from-secondary/10 to-secondary/5 rounded-lg border border-secondary/20">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-500" />
-                      Paiement échelonné activé
-                    </h4>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Vos clients peuvent maintenant payer en plusieurs fois
-                    </p>
-                  </div>
-                  <Badge className="bg-green-500">Actif</Badge>
-                </div>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-2 gap-4">
-                <Card>
-                  <CardContent className="p-4">
-                    <p className="text-sm text-muted-foreground">Commandes en cours</p>
-                    <p className="text-2xl font-bold">0</p>
-                    <p className="text-xs text-muted-foreground">paiements échelonnés</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-4">
-                    <p className="text-sm text-muted-foreground">Montant total</p>
-                    <p className="text-2xl font-bold">0 FCFA</p>
-                    <p className="text-xs text-muted-foreground">en attente de paiement</p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Info */}
-              <div className="p-4 bg-muted rounded-lg">
-                <p className="text-sm">
-                  ℹ️ <strong>Comment ça marche ?</strong> Lorsqu'un client choisit le paiement en plusieurs fois, 
-                  vous recevez le montant total immédiatement. Le service de paiement échelonné gère les prélèvements 
-                  auprès du client et prend en charge le risque d'impayé.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
     </div>
   );
