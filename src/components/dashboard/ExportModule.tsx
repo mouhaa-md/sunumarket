@@ -173,7 +173,7 @@ Validité: 30 jours
 ═══════════════════════════════════════
 
 RÉPUBLIQUE DU SÉNÉGAL
-Ministère du Commerce et de l'Industrie
+Ministère de l'Industrie et du Commerce
 
 N° Certificat: CO-${Date.now().toString(36).toUpperCase()}
 Date: ${new Date().toLocaleDateString("fr-FR")}

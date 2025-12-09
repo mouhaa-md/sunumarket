@@ -234,7 +234,7 @@ export const AgentExportModule = ({
       doc.setFontSize(22);
       doc.text("RAPPORT SUNUMARKET", 105, 18, { align: "center" });
       doc.setFontSize(12);
-      doc.text(`Ministère du Commerce et de l'Industrie - ${regionLabel}`, 105, 28, { align: "center" });
+      doc.text(`Ministère de l'Industrie et du Commerce - ${regionLabel}`, 105, 28, { align: "center" });
       doc.text(`Date: ${today}`, 105, 35, { align: "center" });
 
       doc.setTextColor(0, 0, 0);
