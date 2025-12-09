@@ -328,7 +328,6 @@ const AgentDashboard = () => {
 
   const menuItems = [
     { id: "accueil", label: "Accueil Ministère", icon: Building2 },
-    { id: "validation", label: "Validation vendeurs", icon: CheckCircle },
     { id: "certifications", label: "Certifications", icon: Award },
     { id: "traceability", label: "Traçabilité Nationale", icon: MapPin },
     { id: "verification", label: "Vérification Cartes", icon: QrCode },
@@ -398,9 +397,6 @@ const AgentDashboard = () => {
                       >
                         <item.icon className="h-5 w-5" />
                         <span className="text-sm">{item.label}</span>
-                        {item.id === "validation" && pendingSellers.length > 0 && (
-                          <Badge className="ml-auto bg-red-500">{pendingSellers.length}</Badge>
-                        )}
                         {item.id === "certifications" && pendingCertifications.length > 0 && (
                           <Badge className="ml-auto bg-orange-500">{pendingCertifications.length}</Badge>
                         )}
@@ -416,18 +412,7 @@ const AgentDashboard = () => {
               {activeTab === "accueil" && (
                 <>
                   {/* Stats Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm text-muted-foreground">Vendeurs validés</p>
-                            <p className="text-2xl font-bold">{validatedSellers}</p>
-                          </div>
-                          <Users className="h-8 w-8 text-green-500" />
-                        </div>
-                      </CardContent>
-                    </Card>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card>
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
@@ -436,17 +421,6 @@ const AgentDashboard = () => {
                             <p className="text-2xl font-bold text-secondary">{allSellers.filter(s => s.is_certified).length}</p>
                           </div>
                           <Award className="h-8 w-8 text-secondary" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm text-muted-foreground">En attente</p>
-                            <p className="text-2xl font-bold">{pendingSellers.length}</p>
-                          </div>
-                          <CheckCircle className="h-8 w-8 text-orange-500" />
                         </div>
                       </CardContent>
                     </Card>
@@ -500,90 +474,6 @@ const AgentDashboard = () => {
                 </>
               )}
 
-              {activeTab === "validation" && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-secondary" />
-                      Validation des vendeurs
-                      {pendingSellers.length > 0 && (
-                        <Badge className="ml-2">{pendingSellers.length} en attente</Badge>
-                      )}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {pendingSellers.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-8">
-                        Aucune demande de validation en attente
-                      </p>
-                    ) : (
-                      <div className="space-y-4">
-                        {pendingSellers.map((seller) => (
-                          <div
-                            key={seller.id}
-                            className="p-4 border rounded-lg space-y-3"
-                          >
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <p className="font-bold">{seller.business_name}</p>
-                                <p className="text-sm text-muted-foreground">
-                                  {(seller as any).profiles?.full_name} • {(seller as any).profiles?.email}
-                                </p>
-                              </div>
-                              <Badge variant="outline">En attente</Badge>
-                            </div>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-                              <div>
-                                <span className="text-muted-foreground">Type:</span>{" "}
-                                <span className="capitalize">{seller.business_type?.replace("_", " ")}</span>
-                              </div>
-                              <div>
-                                <span className="text-muted-foreground">Région:</span>{" "}
-                                {getRegionLabel(seller.region)}
-                              </div>
-                              <div>
-                                <span className="text-muted-foreground">Secteur:</span>{" "}
-                                <span className="capitalize">{seller.activity_sector}</span>
-                              </div>
-                              {seller.ninea && (
-                                <div>
-                                  <span className="text-muted-foreground">NINEA:</span>{" "}
-                                  {seller.ninea}
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex gap-2 pt-2 border-t">
-                              <Button
-                                size="sm"
-                                onClick={() => handleValidateSeller(seller.id, seller.user_id)}
-                                className="bg-green-600 hover:bg-green-700"
-                              >
-                                <CheckCircle className="h-4 w-4 mr-1" />
-                                Valider
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => {
-                                  setSelectedSeller(seller);
-                                  setIsRejectDialogOpen(true);
-                                }}
-                              >
-                                <XCircle className="h-4 w-4 mr-1" />
-                                Refuser
-                              </Button>
-                              <Button size="sm" variant="outline">
-                                <Eye className="h-4 w-4 mr-1" />
-                                Voir documents
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              )}
 
               {activeTab === "certifications" && (
                 <div className="space-y-6">
