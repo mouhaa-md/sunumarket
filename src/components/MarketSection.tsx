@@ -83,7 +83,7 @@ const MarketSection = () => {
         </div>
         <p className="text-center text-lg text-muted-foreground max-w-2xl mx-auto">
           Le e-commerce au Sénégal devrait atteindre <span className="font-bold text-secondary">500M€</span> d'ici 2027, 
-          avec une croissance annuelle de <span className="font-bold text-secondary">30%</span>
+          avec une croissance annuelle de <span className="font-bold text-secondary">20%</span>
         </p>
       </div>
     </section>
