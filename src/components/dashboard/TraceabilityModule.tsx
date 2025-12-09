@@ -16,7 +16,8 @@ import {
   Eye,
   Download,
   Leaf,
-  Heart
+  Heart,
+  Plus
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -38,6 +39,7 @@ interface TraceabilityModuleProps {
     activity_sector: string;
     is_certified?: boolean;
   } | null;
+  onNavigateToProducts?: () => void;
 }
 
 // Senegal regions with coordinates for the map
@@ -66,7 +68,12 @@ const PRODUCT_JOURNEY_STEPS = [
   { id: 5, label: "Livraison", icon: Store, description: "Réception client" },
 ];
 
-const TraceabilityModule = ({ products, sellerDetails }: TraceabilityModuleProps) => {
+// Generate consistent QR code URL (same format as Marketplace/ProductDetail)
+const generateProductQRUrl = (productId: string) => {
+  return `https://sunumarket.sn/verify/${productId}`;
+};
+
+const TraceabilityModule = ({ products, sellerDetails, onNavigateToProducts }: TraceabilityModuleProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
@@ -81,17 +88,7 @@ const TraceabilityModule = ({ products, sellerDetails }: TraceabilityModuleProps
     familiesSupported: Math.max(1, Math.floor(totalProducts * 0.8)),
   };
 
-  const generateProductQRData = (product: Product) => {
-    return JSON.stringify({
-      id: product.id,
-      name: product.name,
-      producer: sellerDetails?.business_name,
-      region: product.origin_region || sellerDetails?.region,
-      certified: product.is_certified,
-      date: product.created_at,
-      platform: "SunuMarket"
-    });
-  };
+  // No longer needed - using generateProductQRUrl instead
 
   return (
     <div className="space-y-6">
@@ -234,10 +231,20 @@ const TraceabilityModule = ({ products, sellerDetails }: TraceabilityModuleProps
           </CardHeader>
           <CardContent>
             {products.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>Aucun produit à afficher</p>
-                <p className="text-sm">Ajoutez des produits pour générer leurs QR codes</p>
+              <div className="text-center py-8">
+                <div className="p-4 rounded-full bg-muted/50 w-fit mx-auto mb-4">
+                  <Package className="h-12 w-12 text-muted-foreground" />
+                </div>
+                <p className="font-medium mb-1">Aucun produit à afficher</p>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Ajoutez des produits pour générer leurs QR codes de traçabilité
+                </p>
+                {onNavigateToProducts && (
+                  <Button onClick={onNavigateToProducts} className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Ajouter un produit
+                  </Button>
+                )}
               </div>
             ) : (
               <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
@@ -246,9 +253,9 @@ const TraceabilityModule = ({ products, sellerDetails }: TraceabilityModuleProps
                     key={product.id}
                     className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
                   >
-                    <div className="p-2 bg-white rounded-lg">
+                    <div className="p-2 bg-white rounded-lg border">
                       <QRCodeSVG
-                        value={generateProductQRData(product)}
+                        value={generateProductQRUrl(product.id)}
                         size={48}
                         level="M"
                       />
@@ -272,15 +279,18 @@ const TraceabilityModule = ({ products, sellerDetails }: TraceabilityModuleProps
                           <DialogTitle>Parcours Produit</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4">
-                          {/* QR Code Large */}
-                          <div className="flex justify-center p-4 bg-white rounded-xl">
+                          {/* QR Code Large - Same URL as Marketplace */}
+                          <div className="flex justify-center p-4 bg-white rounded-xl border">
                             <QRCodeSVG
-                              value={generateProductQRData(product)}
+                              value={generateProductQRUrl(product.id)}
                               size={180}
                               level="H"
                               includeMargin
                             />
                           </div>
+                          <p className="text-xs text-center text-muted-foreground">
+                            Scannez pour vérifier sur sunumarket.sn/verify/{product.id.slice(0, 8)}...
+                          </p>
                           
                           {/* Product Info */}
                           <div className="text-center">
