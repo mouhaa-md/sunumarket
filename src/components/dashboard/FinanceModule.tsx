@@ -48,13 +48,9 @@ interface FinanceModuleProps {
   products: any[];
 }
 
-// Bank partners data
+// EcoBank - Partenaire exclusif
 const BANK_PARTNERS = [
-  { id: "bicis", name: "BICIS", logo: "🏦", maxAmount: 5000000, rate: 8.5 },
-  { id: "cbao", name: "CBAO", logo: "🏛️", maxAmount: 3000000, rate: 9.0 },
-  { id: "sgbs", name: "SGBS", logo: "💳", maxAmount: 4000000, rate: 8.0 },
-  { id: "bhs", name: "BHS", logo: "🏠", maxAmount: 2500000, rate: 7.5 },
-  { id: "bnde", name: "BNDE", logo: "🌱", maxAmount: 10000000, rate: 6.5, artisanBonus: true },
+  { id: "ecobank", name: "Ecobank", logo: "/ecobank-logo.png", maxAmount: 15000000, rate: 6.0, artisanBonus: true, description: "Leader panafricain du financement des artisans et PME" },
 ];
 
 export const FinanceModule = ({ isCertified, totalRevenue, orders, products }: FinanceModuleProps) => {
@@ -395,32 +391,72 @@ export const FinanceModule = ({ isCertified, totalRevenue, orders, products }: F
                 </div>
               </div>
 
-              {/* Bank Partners */}
-              <div>
-                <h4 className="font-medium mb-3">Nos partenaires bancaires</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {BANK_PARTNERS.map((bank) => (
-                    <div 
-                      key={bank.id} 
-                      className={`p-4 border rounded-lg transition-all cursor-pointer hover:border-secondary ${
-                        bank.artisanBonus ? "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-green-200" : ""
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-2xl">{bank.logo}</span>
-                        <span className="font-medium">{bank.name}</span>
-                        {bank.artisanBonus && (
-                          <Badge variant="secondary" className="text-xs">Artisan+</Badge>
-                        )}
+              {/* Ecobank Partner Highlight */}
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0066B3] via-[#004A82] to-[#003366] p-6 text-white shadow-2xl">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl transform translate-x-32 -translate-y-32" />
+                  <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-400 rounded-full blur-3xl transform -translate-x-24 translate-y-24" />
+                </div>
+                
+                <div className="relative z-10">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-white rounded-xl p-3 shadow-lg">
+                        <Building2 className="h-10 w-10 text-[#0066B3]" />
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        Jusqu'à {bank.maxAmount.toLocaleString()} FCFA
-                      </p>
-                      <p className="text-sm text-green-600 font-medium">
-                        Taux: {bank.rate}% /an
-                      </p>
+                      <div>
+                        <h3 className="text-2xl font-bold tracking-wide">ECOBANK</h3>
+                        <p className="text-blue-200 text-sm">Partenaire Officiel SunuMarket</p>
+                      </div>
                     </div>
-                  ))}
+                    <Badge className="bg-yellow-400 text-black font-bold px-4 py-2 text-sm">
+                      <Sparkles className="h-4 w-4 mr-1" />
+                      Artisan+
+                    </Badge>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-blue-100 mb-6 text-lg">
+                    Leader panafricain du financement des artisans et PME sénégalaises. 
+                    Bénéficiez de conditions préférentielles exclusives via SunuMarket.
+                  </p>
+
+                  {/* Benefits Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <Banknote className="h-8 w-8 text-yellow-400 mb-2" />
+                      <p className="text-2xl font-bold">15 000 000</p>
+                      <p className="text-blue-200 text-sm">FCFA Maximum</p>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <TrendingUp className="h-8 w-8 text-green-400 mb-2" />
+                      <p className="text-2xl font-bold">6%</p>
+                      <p className="text-blue-200 text-sm">Taux préférentiel /an</p>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <Clock className="h-8 w-8 text-orange-400 mb-2" />
+                      <p className="text-2xl font-bold">48h</p>
+                      <p className="text-blue-200 text-sm">Réponse rapide</p>
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <div className="flex flex-wrap gap-3">
+                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
+                      <CheckCircle2 className="h-4 w-4 text-green-400" />
+                      <span>Aucun frais de dossier</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
+                      <CheckCircle2 className="h-4 w-4 text-green-400" />
+                      <span>Remboursement flexible</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm">
+                      <CheckCircle2 className="h-4 w-4 text-green-400" />
+                      <span>Accompagnement personnalisé</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
