@@ -44,6 +44,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { MemberCard } from "@/components/dashboard/MemberCard";
 import { ExportModule } from "@/components/dashboard/ExportModule";
+import { FinanceModule } from "@/components/dashboard/FinanceModule";
 
 const SENEGAL_REGIONS = [
   { value: "dakar", label: "Dakar" },
@@ -295,11 +296,11 @@ const SellerDashboard = () => {
     { id: "dashboard", label: "Tableau de bord", icon: BarChart3 },
     { id: "products", label: "Mes produits", icon: Package },
     { id: "orders", label: "Commandes", icon: ClipboardList },
+    { id: "finance", label: "Financement & Croissance", icon: TrendingUp },
     { id: "export", label: "Export International", icon: Globe },
     { id: "member-card", label: "Ma Carte Membre", icon: CreditCard },
     { id: "certification", label: "Certification SunuMark", icon: Award },
-    { id: "stats", label: "Statistiques", icon: TrendingUp },
-    { id: "revenue", label: "Paiements/revenus", icon: DollarSign },
+    { id: "stats", label: "Statistiques", icon: BarChart3 },
     { id: "business", label: "Mon entreprise", icon: Factory },
     { id: "promotions", label: "Promotions", icon: Megaphone },
   ];
@@ -681,6 +682,15 @@ const SellerDashboard = () => {
                 </Card>
               )}
 
+              {activeTab === "finance" && (
+                <FinanceModule
+                  isCertified={sellerDetails?.is_certified || false}
+                  totalRevenue={totalRevenue}
+                  orders={orders}
+                  products={products}
+                />
+              )}
+
               {activeTab === "export" && (
                 <ExportModule 
                   isCertified={sellerDetails?.is_certified || false} 
@@ -847,12 +857,11 @@ const SellerDashboard = () => {
                 </Card>
               )}
 
-              {(activeTab === "stats" || activeTab === "revenue" || activeTab === "promotions") && (
+              {(activeTab === "stats" || activeTab === "promotions") && (
                 <Card>
                   <CardHeader>
                     <CardTitle>
                       {activeTab === "stats" && "Statistiques de vente"}
-                      {activeTab === "revenue" && "Paiements et revenus"}
                       {activeTab === "promotions" && "Promotions"}
                     </CardTitle>
                   </CardHeader>
