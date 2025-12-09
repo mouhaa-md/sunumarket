@@ -15,22 +15,106 @@ interface SenegalMapProps {
   highlightedRegion?: string | null;
 }
 
-// Senegal regions with SVG path data and approximate centers
+// Senegal regions with accurate SVG paths based on real geography
 const SENEGAL_REGIONS_MAP = [
-  { id: "saint_louis", name: "Saint-Louis", path: "M120,20 L180,15 L220,25 L210,60 L160,70 L120,55 Z", cx: 165, cy: 40 },
-  { id: "matam", name: "Matam", path: "M220,25 L280,20 L320,35 L310,75 L260,85 L210,60 Z", cx: 265, cy: 50 },
-  { id: "louga", name: "Louga", path: "M80,55 L120,55 L160,70 L150,110 L100,105 L70,80 Z", cx: 115, cy: 85 },
-  { id: "dakar", name: "Dakar", path: "M30,90 L50,85 L60,100 L50,115 L30,110 Z", cx: 45, cy: 100 },
-  { id: "thies", name: "Thiès", path: "M50,85 L80,75 L100,105 L90,130 L60,125 L50,115 Z", cx: 75, cy: 105 },
-  { id: "diourbel", name: "Diourbel", path: "M100,105 L150,110 L145,145 L95,140 L90,130 Z", cx: 120, cy: 125 },
-  { id: "fatick", name: "Fatick", path: "M60,125 L95,140 L100,175 L65,180 L45,155 Z", cx: 75, cy: 155 },
-  { id: "kaolack", name: "Kaolack", path: "M95,140 L145,145 L155,180 L100,175 Z", cx: 125, cy: 160 },
-  { id: "kaffrine", name: "Kaffrine", path: "M145,145 L210,140 L220,180 L155,180 Z", cx: 180, cy: 160 },
-  { id: "tambacounda", name: "Tambacounda", path: "M210,60 L310,75 L330,140 L280,170 L220,180 L210,140 Z", cx: 265, cy: 120 },
-  { id: "kedougou", name: "Kédougou", path: "M280,170 L330,140 L350,180 L340,220 L290,210 Z", cx: 315, cy: 180 },
-  { id: "kolda", name: "Kolda", path: "M180,200 L220,180 L280,170 L290,210 L240,230 L180,220 Z", cx: 230, cy: 200 },
-  { id: "sedhiou", name: "Sédhiou", path: "M120,200 L180,200 L180,220 L140,235 L110,220 Z", cx: 145, cy: 215 },
-  { id: "ziguinchor", name: "Ziguinchor", path: "M50,200 L120,200 L110,220 L80,240 L40,230 Z", cx: 80, cy: 220 },
+  { 
+    id: "saint_louis", 
+    name: "Saint-Louis", 
+    path: "M90,10 L180,5 L220,15 L250,10 L260,25 L240,50 L200,55 L160,70 L120,65 L100,55 L85,40 Z",
+    cx: 170, cy: 35,
+    defaultColor: "#8B5CF6" // Purple
+  },
+  { 
+    id: "matam", 
+    name: "Matam", 
+    path: "M260,25 L320,15 L370,25 L380,50 L370,90 L340,110 L300,100 L260,85 L240,50 Z",
+    cx: 310, cy: 60,
+    defaultColor: "#0EA5E9" // Blue
+  },
+  { 
+    id: "louga", 
+    name: "Louga", 
+    path: "M85,40 L100,55 L120,65 L160,70 L150,100 L120,110 L80,100 L60,70 Z",
+    cx: 110, cy: 80,
+    defaultColor: "#7C3AED" // Dark purple
+  },
+  { 
+    id: "dakar", 
+    name: "Dakar", 
+    path: "M25,95 L40,90 L50,100 L45,115 L30,115 L20,105 Z",
+    cx: 35, cy: 102,
+    defaultColor: "#EF4444" // Red
+  },
+  { 
+    id: "thies", 
+    name: "Thiès", 
+    path: "M40,90 L60,70 L80,100 L85,120 L70,135 L50,130 L45,115 L50,100 Z",
+    cx: 65, cy: 105,
+    defaultColor: "#22C55E" // Green
+  },
+  { 
+    id: "diourbel", 
+    name: "Diourbel", 
+    path: "M80,100 L120,110 L130,130 L110,145 L85,140 L85,120 Z",
+    cx: 105, cy: 125,
+    defaultColor: "#3B82F6" // Blue
+  },
+  { 
+    id: "fatick", 
+    name: "Fatick", 
+    path: "M50,130 L70,135 L85,140 L90,165 L70,180 L45,175 L40,150 Z",
+    cx: 65, cy: 155,
+    defaultColor: "#A855F7" // Purple/Magenta
+  },
+  { 
+    id: "kaolack", 
+    name: "Kaolack", 
+    path: "M85,140 L110,145 L130,160 L120,185 L90,180 L90,165 Z",
+    cx: 108, cy: 165,
+    defaultColor: "#EC4899" // Pink
+  },
+  { 
+    id: "kaffrine", 
+    name: "Kaffrine", 
+    path: "M130,130 L180,125 L200,150 L190,180 L150,185 L130,160 Z",
+    cx: 165, cy: 155,
+    defaultColor: "#10B981" // Green
+  },
+  { 
+    id: "tambacounda", 
+    name: "Tambacounda", 
+    path: "M200,55 L260,85 L300,100 L340,110 L350,150 L340,190 L300,210 L250,200 L200,190 L190,180 L200,150 L180,125 L150,100 L160,70 Z",
+    cx: 260, cy: 145,
+    defaultColor: "#92400E" // Brown
+  },
+  { 
+    id: "kedougou", 
+    name: "Kédougou", 
+    path: "M300,210 L340,190 L370,200 L380,240 L350,270 L300,260 L280,230 Z",
+    cx: 335, cy: 235,
+    defaultColor: "#FACC15" // Yellow
+  },
+  { 
+    id: "kolda", 
+    name: "Kolda", 
+    path: "M180,230 L250,200 L300,210 L280,230 L300,260 L260,280 L200,280 L170,260 Z",
+    cx: 235, cy: 250,
+    defaultColor: "#A16207" // Brown/Tan
+  },
+  { 
+    id: "sedhiou", 
+    name: "Sédhiou", 
+    path: "M100,250 L140,240 L170,260 L160,285 L120,295 L90,280 Z",
+    cx: 130, cy: 270,
+    defaultColor: "#16A34A" // Green
+  },
+  { 
+    id: "ziguinchor", 
+    name: "Ziguinchor", 
+    path: "M30,260 L80,250 L100,250 L90,280 L70,300 L35,295 L20,275 Z",
+    cx: 60, cy: 275,
+    defaultColor: "#DB2777" // Magenta/Pink
+  },
 ];
 
 const SenegalMap = ({ regionsData = [], onRegionClick, selectedRegion, highlightedRegion }: SenegalMapProps) => {
@@ -41,25 +125,19 @@ const SenegalMap = ({ regionsData = [], onRegionClick, selectedRegion, highlight
     return region?.producers || 0;
   };
 
-  const getRegionColor = (regionId: string) => {
-    const producers = getRegionProducers(regionId);
-    const isSelected = selectedRegion === regionId;
-    const isHovered = hoveredRegion === regionId;
-    const isHighlighted = highlightedRegion === regionId;
+  const getRegionColor = (region: typeof SENEGAL_REGIONS_MAP[0]) => {
+    const isSelected = selectedRegion === region.id;
+    const isHovered = hoveredRegion === region.id;
+    const isHighlighted = highlightedRegion === region.id;
 
     if (isSelected || isHighlighted) {
       return "hsl(var(--secondary))";
     }
     if (isHovered) {
-      return "hsl(var(--secondary) / 0.7)";
+      return `${region.defaultColor}CC`; // Add transparency on hover
     }
     
-    // Color intensity based on producer count
-    if (producers > 200) return "hsl(var(--primary))";
-    if (producers > 100) return "hsl(var(--primary) / 0.7)";
-    if (producers > 50) return "hsl(var(--primary) / 0.5)";
-    if (producers > 0) return "hsl(var(--primary) / 0.3)";
-    return "hsl(var(--muted))";
+    return region.defaultColor;
   };
 
   const activeRegion = hoveredRegion || selectedRegion;
@@ -69,70 +147,86 @@ const SenegalMap = ({ regionsData = [], onRegionClick, selectedRegion, highlight
   return (
     <div className="relative">
       <svg 
-        viewBox="0 0 380 260" 
+        viewBox="0 0 400 320" 
         className="w-full h-auto"
-        style={{ maxHeight: "300px" }}
+        style={{ maxHeight: "350px" }}
       >
         {/* Background */}
-        <rect x="0" y="0" width="380" height="260" fill="hsl(var(--muted) / 0.3)" rx="8" />
+        <rect x="0" y="0" width="400" height="320" fill="hsl(var(--muted) / 0.2)" rx="8" />
         
-        {/* Ocean effect */}
-        <ellipse cx="20" cy="150" rx="40" ry="80" fill="hsl(210 100% 50% / 0.1)" />
+        {/* Ocean/Atlantic effect on the left */}
+        <ellipse cx="-20" cy="180" rx="60" ry="150" fill="hsl(210 100% 50% / 0.08)" />
         
+        {/* Gambia river gap effect */}
+        <path
+          d="M30,220 Q80,215 130,220 Q160,225 180,230"
+          fill="none"
+          stroke="hsl(var(--background))"
+          strokeWidth="8"
+          strokeLinecap="round"
+        />
+
         {/* Regions */}
         {SENEGAL_REGIONS_MAP.map((region) => (
           <g key={region.id}>
             <path
               d={region.path}
-              fill={getRegionColor(region.id)}
+              fill={getRegionColor(region)}
               stroke="hsl(var(--background))"
               strokeWidth="2"
               className="cursor-pointer transition-all duration-300"
+              style={{
+                filter: (hoveredRegion === region.id || selectedRegion === region.id) 
+                  ? "brightness(1.1) drop-shadow(0 4px 6px rgba(0,0,0,0.3))" 
+                  : "none",
+                transform: (hoveredRegion === region.id || selectedRegion === region.id) 
+                  ? "scale(1.02)" 
+                  : "scale(1)",
+                transformOrigin: `${region.cx}px ${region.cy}px`
+              }}
               onMouseEnter={() => setHoveredRegion(region.id)}
               onMouseLeave={() => setHoveredRegion(null)}
               onClick={() => onRegionClick?.(region.id)}
             />
-            {/* Region center dot */}
-            <circle
-              cx={region.cx}
-              cy={region.cy}
-              r={getRegionProducers(region.id) > 100 ? 4 : 3}
-              fill="hsl(var(--background))"
-              className="pointer-events-none"
-            />
+            {/* Region label */}
+            <text
+              x={region.cx}
+              y={region.cy}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize={region.id === "dakar" ? "6" : "8"}
+              fontWeight="600"
+              fill="white"
+              className="pointer-events-none select-none"
+              style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
+            >
+              {region.name}
+            </text>
           </g>
         ))}
-
-        {/* Gambia river indication */}
-        <path
-          d="M50,190 Q100,195 150,190 Q180,185 200,195"
-          fill="none"
-          stroke="hsl(210 100% 50% / 0.3)"
-          strokeWidth="3"
-          strokeDasharray="5,5"
-        />
         
         {/* Legend */}
-        <g transform="translate(280, 230)">
-          <text x="0" y="0" fontSize="8" fill="hsl(var(--muted-foreground))">Producteurs</text>
-          <rect x="0" y="5" width="12" height="8" fill="hsl(var(--primary))" rx="2" />
-          <text x="16" y="12" fontSize="7" fill="hsl(var(--muted-foreground))">200+</text>
-          <rect x="45" y="5" width="12" height="8" fill="hsl(var(--primary) / 0.5)" rx="2" />
-          <text x="61" y="12" fontSize="7" fill="hsl(var(--muted-foreground))">50+</text>
+        <g transform="translate(300, 290)">
+          <rect x="0" y="0" width="90" height="25" fill="hsl(var(--background) / 0.8)" rx="4" />
+          <text x="10" y="16" fontSize="9" fill="hsl(var(--foreground))">14 régions</text>
         </g>
       </svg>
 
       {/* Region Info Tooltip */}
       {activeRegion && activeRegionData && (
-        <div className="absolute bottom-2 left-2 right-2 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-lg">
+        <div className="absolute bottom-2 left-2 right-2 bg-background/95 backdrop-blur-sm rounded-lg p-3 border shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-semibold">{activeRegionData.name}</p>
+              <p className="font-semibold text-lg">{activeRegionData.name}</p>
               <p className="text-sm text-muted-foreground">
-                {activeProducers} producteurs actifs
+                {activeProducers > 0 ? `${activeProducers} producteurs actifs` : "Données en cours de collecte"}
               </p>
             </div>
-            <Badge variant="secondary" className="gap-1">
+            <Badge 
+              variant="secondary" 
+              className="gap-1"
+              style={{ backgroundColor: activeRegionData.defaultColor, color: "white" }}
+            >
               <MapPin className="h-3 w-3" />
               {activeProducers > 0 ? "Active" : "En développement"}
             </Badge>
