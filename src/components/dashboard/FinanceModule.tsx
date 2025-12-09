@@ -114,10 +114,18 @@ export const FinanceModule = ({ isCertified, totalRevenue, orders, products }: F
     const sum = values.reduce((a, b) => a + b, 0);
     const avg = sum / values.length;
     const trend = revenueGrowth > 0 ? 1.1 : revenueGrowth < 0 ? 0.95 : 1;
+    
+    // Calculate explicit future month names
+    const now = new Date();
+    const getMonthName = (offset: number) => {
+      const futureDate = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+      return futureDate.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+    };
+    
     return [
-      { month: "Proj. M+1", revenue: Math.round(avg * trend) },
-      { month: "Proj. M+2", revenue: Math.round(avg * trend * trend) },
-      { month: "Proj. M+3", revenue: Math.round(avg * trend * trend * trend) },
+      { month: getMonthName(1), revenue: Math.round(avg * trend) },
+      { month: getMonthName(2), revenue: Math.round(avg * trend * trend) },
+      { month: getMonthName(3), revenue: Math.round(avg * trend * trend * trend) },
     ];
   }
 
