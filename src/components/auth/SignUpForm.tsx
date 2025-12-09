@@ -79,6 +79,7 @@ const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
     region: "dakar",
     activitySector: "artisanat",
     ninea: "",
+    employeesCount: "1",
     // Agent
     accessCode: "",
     matricule: "",
@@ -148,6 +149,7 @@ const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
       region: formData.region,
       activitySector: formData.activitySector,
       ninea: formData.ninea,
+      employeesCount: parseInt(formData.employeesCount) || 1,
       accessCode: formData.accessCode,
       matricule: formData.matricule,
       direction: formData.direction,
@@ -437,14 +439,28 @@ const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
               </Select>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="ninea">NINEA (optionnel)</Label>
-            <Input
-              id="ninea"
-              placeholder="Numéro d'identification fiscale"
-              value={formData.ninea}
-              onChange={(e) => setFormData({ ...formData, ninea: e.target.value })}
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <Label htmlFor="ninea">NINEA (optionnel)</Label>
+              <Input
+                id="ninea"
+                placeholder="Numéro d'identification fiscale"
+                value={formData.ninea}
+                onChange={(e) => setFormData({ ...formData, ninea: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="employeesCount">Nombre d'employés *</Label>
+              <Input
+                id="employeesCount"
+                type="number"
+                min="1"
+                placeholder="1"
+                value={formData.employeesCount}
+                onChange={(e) => setFormData({ ...formData, employeesCount: e.target.value })}
+                required
+              />
+            </div>
           </div>
         </div>
       )}

@@ -46,6 +46,7 @@ import { MemberCard } from "@/components/dashboard/MemberCard";
 import { ExportModule } from "@/components/dashboard/ExportModule";
 import { FinanceModule } from "@/components/dashboard/FinanceModule";
 import TraceabilityModule from "@/components/dashboard/TraceabilityModule";
+import { BusinessSection } from "@/components/dashboard/BusinessSection";
 
 const SENEGAL_REGIONS = [
   { value: "dakar", label: "Dakar" },
@@ -822,41 +823,10 @@ const SellerDashboard = () => {
               )}
 
               {activeTab === "business" && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Mon entreprise</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {sellerDetails ? (
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-sm text-muted-foreground">Nom de l'entreprise</label>
-                          <p className="font-medium">{sellerDetails.business_name}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm text-muted-foreground">Type</label>
-                          <p className="font-medium capitalize">{sellerDetails.business_type?.replace("_", " ")}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm text-muted-foreground">Région</label>
-                          <p className="font-medium capitalize">{sellerDetails.region?.replace("_", " ")}</p>
-                        </div>
-                        <div>
-                          <label className="text-sm text-muted-foreground">Secteur</label>
-                          <p className="font-medium capitalize">{sellerDetails.activity_sector}</p>
-                        </div>
-                        {sellerDetails.ninea && (
-                          <div>
-                            <label className="text-sm text-muted-foreground">NINEA</label>
-                            <p className="font-medium">{sellerDetails.ninea}</p>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <p className="text-muted-foreground">Informations non disponibles</p>
-                    )}
-                  </CardContent>
-                </Card>
+                <BusinessSection 
+                  sellerDetails={sellerDetails} 
+                  onUpdate={fetchData}
+                />
               )}
 
               {activeTab === "traceability" && (

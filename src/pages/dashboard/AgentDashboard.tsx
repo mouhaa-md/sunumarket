@@ -412,7 +412,7 @@ const AgentDashboard = () => {
               {activeTab === "accueil" && (
                 <>
                   {/* Stats Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <Card>
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
@@ -432,6 +432,19 @@ const AgentDashboard = () => {
                             <p className="text-2xl font-bold">{pendingCertifications.length}</p>
                           </div>
                           <Award className="h-8 w-8 text-orange-500" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Emplois créés</p>
+                            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                              {allSellers.reduce((sum, s) => sum + (s.employees_count || 1), 0)}
+                            </p>
+                          </div>
+                          <Users className="h-8 w-8 text-green-600 dark:text-green-400" />
                         </div>
                       </CardContent>
                     </Card>
