@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { toast } from "sonner";
+import { products as staticProducts } from "@/data/products";
 
 interface CartItem {
   id: string;
@@ -11,15 +12,16 @@ interface CartItem {
     id: string;
     name: string;
     price: number;
-    images: string[] | null;
-    seller_id: string;
+    images?: string[] | null;
+    image?: string;
+    seller_id?: string;
   };
 }
 
 interface CartContextType {
   items: CartItem[];
   isLoading: boolean;
-  addToCart: (productId: string, sellerId: string, quantity?: number) => Promise<void>;
+  addToCart: (productId: string, quantity?: number) => Promise<void>;
   removeFromCart: (productId: string) => Promise<void>;
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -30,6 +32,28 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// Check if a product ID is a static product
+const isStaticProduct = (productId: string): boolean => {
+  return staticProducts.some(p => p.id === productId);
+};
+
+// Get static product data
+const getStaticProduct = (productId: string) => {
+  const product = staticProducts.find(p => p.id === productId);
+  if (product) {
+    return {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image
+    };
+  }
+  return null;
+};
+
+// Local storage key for cart
+const CART_STORAGE_KEY = "sunumarket_cart";
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const { user, userRole } = useAuth();
   const [items, setItems] = useState<CartItem[]>([]);
@@ -39,41 +63,101 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     if (user && userRole === "acheteur") {
       refreshCart();
     } else {
-      setItems([]);
+      // Load from localStorage for non-authenticated users
+      loadLocalCart();
     }
   }, [user, userRole]);
 
+  const loadLocalCart = () => {
+    try {
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+      if (stored) {
+        const cartData = JSON.parse(stored);
+        const mappedItems = cartData.map((item: any) => ({
+          id: item.product_id,
+          product_id: item.product_id,
+          quantity: item.quantity,
+          product: getStaticProduct(item.product_id)
+        })).filter((item: CartItem) => item.product);
+        setItems(mappedItems);
+      }
+    } catch (e) {
+      console.error("Error loading cart from localStorage:", e);
+    }
+  };
+
+  const saveLocalCart = (cartItems: CartItem[]) => {
+    try {
+      const toStore = cartItems.map(item => ({
+        product_id: item.product_id,
+        quantity: item.quantity
+      }));
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(toStore));
+    } catch (e) {
+      console.error("Error saving cart to localStorage:", e);
+    }
+  };
+
   const refreshCart = async () => {
-    if (!user) return;
+    if (!user) {
+      loadLocalCart();
+      return;
+    }
     
     setIsLoading(true);
     
-    // Fetch cart items
+    // Fetch cart items from database
     const { data: cartData } = await supabase
       .from("cart_items")
       .select("*")
       .eq("user_id", user.id);
     
     if (cartData && cartData.length > 0) {
-      // Fetch products for each cart item
-      const productIds = cartData.map(item => item.product_id);
-      const { data: productsData } = await supabase
-        .from("products")
-        .select("id, name, price, images, seller_id")
-        .in("id", productIds);
+      // Separate static and DB products
+      const staticItems: CartItem[] = [];
+      const dbProductIds: string[] = [];
       
-      const mappedItems = cartData.map(item => ({
-        ...item,
-        product: productsData?.find(p => p.id === item.product_id)
-      })) as CartItem[];
-      setItems(mappedItems);
+      cartData.forEach(item => {
+        const staticProduct = getStaticProduct(item.product_id);
+        if (staticProduct) {
+          staticItems.push({
+            id: item.id,
+            product_id: item.product_id,
+            quantity: item.quantity,
+            product: staticProduct
+          });
+        } else {
+          dbProductIds.push(item.product_id);
+        }
+      });
+
+      // Fetch DB products
+      let dbItems: CartItem[] = [];
+      if (dbProductIds.length > 0) {
+        const { data: productsData } = await supabase
+          .from("products")
+          .select("id, name, price, images, seller_id")
+          .in("id", dbProductIds);
+        
+        dbItems = cartData
+          .filter(item => dbProductIds.includes(item.product_id))
+          .map(item => ({
+            id: item.id,
+            product_id: item.product_id,
+            quantity: item.quantity,
+            product: productsData?.find(p => p.id === item.product_id)
+          }));
+      }
+
+      setItems([...staticItems, ...dbItems]);
     } else {
-      setItems([]);
+      // Also load from localStorage and merge
+      loadLocalCart();
     }
     setIsLoading(false);
   };
 
-  const addToCart = async (productId: string, sellerId: string, quantity: number = 1) => {
+  const addToCart = async (productId: string, quantity: number = 1) => {
     if (!user) {
       toast.error("Connectez-vous pour ajouter au panier");
       return;
@@ -91,6 +175,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
+    // Add to database
     const { error } = await supabase
       .from("cart_items")
       .insert({
@@ -100,6 +185,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       });
 
     if (error) {
+      console.error("Error adding to cart:", error);
       toast.error("Erreur lors de l'ajout au panier");
       return;
     }
@@ -109,7 +195,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeFromCart = async (productId: string) => {
-    if (!user) return;
+    if (!user) {
+      // Remove from local storage
+      const newItems = items.filter(item => item.product_id !== productId);
+      setItems(newItems);
+      saveLocalCart(newItems);
+      toast.success("Retiré du panier");
+      return;
+    }
 
     await supabase
       .from("cart_items")
@@ -122,7 +215,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateQuantity = async (productId: string, quantity: number) => {
-    if (!user || quantity < 1) return;
+    if (quantity < 1) return;
+
+    if (!user) {
+      const newItems = items.map(item => 
+        item.product_id === productId ? { ...item, quantity } : item
+      );
+      setItems(newItems);
+      saveLocalCart(newItems);
+      return;
+    }
 
     await supabase
       .from("cart_items")
@@ -136,7 +238,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const clearCart = async () => {
-    if (!user) return;
+    if (!user) {
+      setItems([]);
+      localStorage.removeItem(CART_STORAGE_KEY);
+      toast.success("Panier vidé");
+      return;
+    }
 
     await supabase
       .from("cart_items")
