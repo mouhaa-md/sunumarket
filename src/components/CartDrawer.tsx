@@ -53,7 +53,7 @@ const CartDrawer = () => {
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-3 p-3 border rounded-lg">
                     <img
-                      src={item.product?.images?.[0] || "/placeholder.svg"}
+                      src={item.product?.image || item.product?.images?.[0] || "/placeholder.svg"}
                       alt={item.product?.name}
                       className="w-16 h-16 object-cover rounded"
                     />

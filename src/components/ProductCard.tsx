@@ -87,8 +87,7 @@ const ProductCard = ({ product, averageRating = 0, reviewCount = 0 }: ProductCar
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // For static products, we use the product id as both product and seller id
-    addToCart(product.id, product.id);
+    addToCart(product.id);
   };
 
   return (

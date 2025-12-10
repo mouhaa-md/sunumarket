@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { products } from "@/data/products";
+import { products, findProduct } from "@/data/products";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, MapPin, User, ArrowLeft, Package, Heart, ShoppingCart } from "lucide-react";
+import { ShieldCheck, MapPin, User, ArrowLeft, Package, Heart, ShoppingCart, ChevronRight, Home } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import NotFound from "./NotFound";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,6 +14,7 @@ import { useCart } from "@/hooks/useCart";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ProductReviews from "@/components/ProductReviews";
+import ProductSEO from "@/components/ProductSEO";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -21,7 +22,10 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const product = products.find((p) => p.id === id);
+  const [reviewStats, setReviewStats] = useState({ average: 0, count: 0 });
+  
+  // Find product by ID or slug
+  const product = findProduct(id || "");
   
   // For database products, we need the seller_id
   const sellerId = product?.id || "";
@@ -30,7 +34,24 @@ const ProductDetail = () => {
     if (user && userRole === "acheteur" && product) {
       checkFavorite();
     }
+    if (product) {
+      fetchReviewStats();
+    }
   }, [user, userRole, product?.id]);
+
+  const fetchReviewStats = async () => {
+    if (!product) return;
+    
+    const { data } = await supabase
+      .from("product_reviews")
+      .select("rating")
+      .eq("product_id", product.id);
+    
+    if (data && data.length > 0) {
+      const avg = data.reduce((sum, r) => sum + r.rating, 0) / data.length;
+      setReviewStats({ average: avg, count: data.length });
+    }
+  };
 
   const checkFavorite = async () => {
     if (!user || !product) return;
@@ -105,12 +126,41 @@ const ProductDetail = () => {
     window.open(whatsappUrl, '_blank');
   };
 
+  const handleAddToCart = () => {
+    addToCart(product.id);
+  };
+
   return (
     <div className="min-h-screen">
       <Header />
       
+      {/* SEO Component */}
+      <ProductSEO 
+        product={product} 
+        averageRating={reviewStats.average} 
+        reviewCount={reviewStats.count} 
+      />
+      
       <main className="pt-16">
         <div className="section-container py-6 md:py-8">
+          {/* Breadcrumbs */}
+          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-4" aria-label="Breadcrumb">
+            <Link to="/" className="hover:text-foreground flex items-center gap-1">
+              <Home className="h-4 w-4" />
+              Accueil
+            </Link>
+            <ChevronRight className="h-4 w-4" />
+            <Link to="/marketplace" className="hover:text-foreground">
+              Marketplace
+            </Link>
+            <ChevronRight className="h-4 w-4" />
+            <Link to={`/marketplace?category=${encodeURIComponent(product.category)}`} className="hover:text-foreground">
+              {product.category}
+            </Link>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-foreground font-medium truncate max-w-[200px]">{product.name}</span>
+          </nav>
+
           <Link to="/marketplace">
             <Button variant="ghost" className="mb-4 md:mb-6">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -124,7 +174,7 @@ const ProductDetail = () => {
               <div className="relative overflow-hidden rounded-lg border-2 border-secondary/20">
                 <img
                   src={product.image}
-                  alt={product.name}
+                  alt={`${product.name} - ${product.producer} - Made in Senegal`}
                   className="w-full aspect-square object-cover"
                 />
                 {product.certified && (
@@ -210,7 +260,7 @@ const ProductDetail = () => {
                   size="lg"
                   variant="secondary"
                   className="flex-1"
-                  onClick={() => addToCart(product.id, sellerId)}
+                  onClick={handleAddToCart}
                 >
                   <ShoppingCart className="h-5 w-5 mr-2" />
                   Ajouter au panier
@@ -253,11 +303,11 @@ const ProductDetail = () => {
                 .filter((p) => p.category === product.category && p.id !== product.id)
                 .slice(0, 4)
                 .map((relatedProduct) => (
-                  <Link key={relatedProduct.id} to={`/produit/${relatedProduct.id}`}>
+                  <Link key={relatedProduct.id} to={`/produit/${relatedProduct.slug || relatedProduct.id}`}>
                     <Card className="group overflow-hidden border-2 border-secondary/20 hover:border-secondary/40 transition-all duration-300">
                       <img
                         src={relatedProduct.image}
-                        alt={relatedProduct.name}
+                        alt={`${relatedProduct.name} - Made in Senegal`}
                         className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-300"
                       />
                       <CardContent className="p-4">

@@ -22,11 +22,19 @@ export interface Product {
   certified: boolean;
   description: string;
   origin: string;
+  slug?: string;
 }
+
+// Helper to generate consistent UUIDs for static products
+const generateStaticUUID = (index: number) => {
+  // Using a predictable format for static products
+  return `00000000-0000-0000-0000-00000000000${index.toString().padStart(1, '0')}`;
+};
 
 export const products: Product[] = [
   {
-    id: "1",
+    id: generateStaticUUID(1),
+    slug: "panier-osier-traditionnel",
     name: "Panier en Osier Traditionnel",
     price: 15000,
     category: "Artisanat",
@@ -38,7 +46,8 @@ export const products: Product[] = [
     origin: "Fabriqué à Thiès avec des matériaux locaux"
   },
   {
-    id: "2",
+    id: generateStaticUUID(2),
+    slug: "huile-arachide-pure",
     name: "Huile d'Arachide Pure",
     price: 8000,
     category: "Agroalimentaire",
@@ -50,7 +59,8 @@ export const products: Product[] = [
     origin: "Arachides cultivées et transformées à Kaolack"
   },
   {
-    id: "3",
+    id: generateStaticUUID(3),
+    slug: "boubou-bazin-brode",
     name: "Boubou Bazin Brodé",
     price: 45000,
     category: "Textile",
@@ -62,7 +72,8 @@ export const products: Product[] = [
     origin: "Confectionné à Dakar par des couturiers experts"
   },
   {
-    id: "4",
+    id: generateStaticUUID(4),
+    slug: "savon-beurre-karite",
     name: "Savon au Beurre de Karité",
     price: 2500,
     category: "Cosmétique",
@@ -74,7 +85,8 @@ export const products: Product[] = [
     origin: "Beurre de karité de Kédougou, transformation locale"
   },
   {
-    id: "5",
+    id: generateStaticUUID(5),
+    slug: "bissap-seche-bio",
     name: "Bissap Séché Bio",
     price: 3000,
     category: "Agroalimentaire",
@@ -86,7 +98,8 @@ export const products: Product[] = [
     origin: "Cultivé en Casamance sans pesticides"
   },
   {
-    id: "6",
+    id: generateStaticUUID(6),
+    slug: "djembe-artisanal",
     name: "Djembé Artisanal",
     price: 35000,
     category: "Artisanat",
@@ -98,7 +111,8 @@ export const products: Product[] = [
     origin: "Fabriqué artisanalement à Ziguinchor"
   },
   {
-    id: "7",
+    id: generateStaticUUID(7),
+    slug: "sac-main-cuir",
     name: "Sac à Main en Cuir",
     price: 28000,
     category: "Maroquinerie",
@@ -110,7 +124,8 @@ export const products: Product[] = [
     origin: "Cuir tanné et travaillé à Saint-Louis"
   },
   {
-    id: "8",
+    id: generateStaticUUID(8),
+    slug: "confiture-mangue",
     name: "Confiture de Mangue",
     price: 4500,
     category: "Agroalimentaire",
@@ -122,7 +137,8 @@ export const products: Product[] = [
     origin: "Mangues de Fatick, transformation locale"
   },
   {
-    id: "9",
+    id: generateStaticUUID(9),
+    slug: "collier-perles-africaines",
     name: "Collier en Perles Africaines",
     price: 12000,
     category: "Bijouterie",
@@ -134,7 +150,8 @@ export const products: Product[] = [
     origin: "Perles collectées et assemblées à Dakar"
   },
   {
-    id: "10",
+    id: "00000000-0000-0000-0000-000000000010",
+    slug: "miel-brousse",
     name: "Miel de Brousse",
     price: 6000,
     category: "Agroalimentaire",
@@ -146,7 +163,8 @@ export const products: Product[] = [
     origin: "Récolté à Tambacounda dans les zones naturelles"
   },
   {
-    id: "11",
+    id: "00000000-0000-0000-0000-000000000011",
+    slug: "echarpe-tissu-ndopp",
     name: "Écharpe en Tissu Ndopp",
     price: 18000,
     category: "Textile",
@@ -158,7 +176,8 @@ export const products: Product[] = [
     origin: "Tissé à la main à Diourbel"
   },
   {
-    id: "12",
+    id: "00000000-0000-0000-0000-000000000012",
+    slug: "ceramique-decorative",
     name: "Céramique Décorative",
     price: 9000,
     category: "Artisanat",
@@ -170,6 +189,11 @@ export const products: Product[] = [
     origin: "Modelé et cuit à Thiès"
   }
 ];
+
+// Helper to find product by ID or slug
+export const findProduct = (idOrSlug: string): Product | undefined => {
+  return products.find(p => p.id === idOrSlug || p.slug === idOrSlug);
+};
 
 export const categories = [
   "Tous",

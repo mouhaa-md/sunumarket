@@ -207,7 +207,7 @@ const BuyerDashboard = () => {
                           {cartItems.map((item) => (
                             <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg">
                               <img
-                                src={item.product?.images?.[0] || "/placeholder.svg"}
+                                src={item.product?.image || item.product?.images?.[0] || "/placeholder.svg"}
                                 alt={item.product?.name}
                                 className="w-20 h-20 object-cover rounded-lg"
                               />
