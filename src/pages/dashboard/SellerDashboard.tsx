@@ -82,6 +82,7 @@ const SellerDashboard = () => {
   const [sellerDetails, setSellerDetails] = useState<any>(null);
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [certificationRequest, setCertificationRequest] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -169,6 +170,14 @@ const SellerDashboard = () => {
       .maybeSingle();
     
     if (certData) setCertificationRequest(certData);
+
+    // Fetch reviews
+    const { data: reviewsData } = await supabase
+      .from("product_reviews")
+      .select("*")
+      .eq("seller_id", user.id);
+    
+    if (reviewsData) setReviews(reviewsData);
   };
 
   const handleSubmitCertification = async () => {
@@ -319,6 +328,12 @@ const SellerDashboard = () => {
     .reduce((sum, o) => sum + (o.total_amount || 0), 0);
   const pendingOrders = orders.filter(o => o.status === "en_attente").length;
   const totalStock = products.reduce((sum, p) => sum + (p.stock || 0), 0);
+  
+  // Calculate reviews stats
+  const averageRating = reviews.length > 0 
+    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+    : "0.0";
+  const totalReviews = reviews.length;
 
   const menuItems = [
     { id: "dashboard", label: "Tableau de bord", icon: BarChart3 },
@@ -439,7 +454,8 @@ const SellerDashboard = () => {
                           <div className="flex flex-col justify-between h-full min-h-[60px]">
                             <p className="text-sm text-muted-foreground">Avis clients</p>
                             <p className="text-2xl font-bold flex items-center gap-1 mt-2">
-                              4.8 <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+                              {averageRating} <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+                              <span className="text-sm text-muted-foreground font-normal">({totalReviews})</span>
                             </p>
                           </div>
                           <Star className="h-8 w-8 text-yellow-500 flex-shrink-0" />
@@ -723,6 +739,10 @@ const SellerDashboard = () => {
                   orders={orders}
                   products={products}
                 />
+              )}
+
+              {activeTab === "reviews" && (
+                <SellerReviews />
               )}
 
               {activeTab === "export" && (

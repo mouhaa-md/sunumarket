@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,11 +20,16 @@ import {
   Clock,
   CheckCircle,
   Truck,
+  Plus,
+  Minus,
+  Trash2,
+  MessageCircle,
 } from "lucide-react";
 import { MemberCard } from "@/components/dashboard/MemberCard";
 
 const BuyerDashboard = () => {
   const { profile, user } = useAuth();
+  const { items: cartItems, totalItems, totalPrice, removeFromCart, updateQuantity, clearCart } = useCart();
   const [orders, setOrders] = useState<any[]>([]);
   const [favorites, setFavorites] = useState<any[]>([]);
   const [buyerDetails, setBuyerDetails] = useState<any>(null);
@@ -109,7 +115,8 @@ const BuyerDashboard = () => {
   };
 
   const menuItems = [
-    { id: "commandes", label: "Mes commandes", icon: ShoppingCart },
+    { id: "panier", label: `Mon panier (${totalItems})`, icon: ShoppingCart },
+    { id: "commandes", label: "Mes commandes", icon: Clock },
     { id: "favoris", label: "Favoris", icon: Heart },
     { id: "member-card", label: "Ma Carte Membre", icon: CreditCard },
     { id: "suivi", label: "Suivi de colis", icon: Package },
@@ -117,6 +124,17 @@ const BuyerDashboard = () => {
     { id: "adresses", label: "Mes adresses", icon: MapPin },
     { id: "aide", label: "Aide/Support", icon: HelpCircle },
   ];
+
+  const handleWhatsAppOrder = () => {
+    const itemsList = cartItems.map(item => 
+      `📦 ${item.product?.name} x${item.quantity} - ${((item.product?.price || 0) * item.quantity).toLocaleString()} FCFA`
+    ).join("\n");
+
+    const message = `Bonjour, je souhaite commander les produits suivants :\n\n${itemsList}\n\n💰 Total : ${totalPrice.toLocaleString()} FCFA\n\nMerci de me contacter pour finaliser ma commande.`;
+    
+    const whatsappUrl = `https://wa.me/221769481773?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -166,6 +184,104 @@ const BuyerDashboard = () => {
 
             {/* Main Content */}
             <div className="flex-1 space-y-6">
+              {activeTab === "panier" && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <ShoppingCart className="h-5 w-5 text-secondary" />
+                      Mon panier ({totalItems} articles)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {cartItems.length === 0 ? (
+                      <div className="text-center py-8">
+                        <ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground">Votre panier est vide</p>
+                        <Link to="/marketplace">
+                          <Button className="mt-4">Explorer les produits</Button>
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        <div className="space-y-4">
+                          {cartItems.map((item) => (
+                            <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg">
+                              <img
+                                src={item.product?.images?.[0] || "/placeholder.svg"}
+                                alt={item.product?.name}
+                                className="w-20 h-20 object-cover rounded-lg"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-medium truncate">{item.product?.name}</h4>
+                                <p className="text-secondary font-bold">
+                                  {item.product?.price?.toLocaleString()} FCFA
+                                </p>
+                                <div className="flex items-center gap-2 mt-2">
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="h-8 w-8"
+                                    onClick={() => updateQuantity(item.product_id, item.quantity - 1)}
+                                    disabled={item.quantity <= 1}
+                                  >
+                                    <Minus className="h-4 w-4" />
+                                  </Button>
+                                  <span className="w-8 text-center">{item.quantity}</span>
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="h-8 w-8"
+                                    onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
+                                  >
+                                    <Plus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-bold">
+                                  {((item.product?.price || 0) * item.quantity).toLocaleString()} FCFA
+                                </p>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="text-red-500 hover:text-red-600 mt-2"
+                                  onClick={() => removeFromCart(item.product_id)}
+                                >
+                                  <Trash2 className="h-4 w-4 mr-1" />
+                                  Retirer
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="border-t pt-4 space-y-4">
+                          <div className="flex justify-between items-center text-lg">
+                            <span className="font-semibold">Total</span>
+                            <span className="text-2xl font-bold text-secondary">
+                              {totalPrice.toLocaleString()} FCFA
+                            </span>
+                          </div>
+
+                          <div className="flex gap-3">
+                            <Button
+                              className="flex-1 bg-green-600 hover:bg-green-700"
+                              onClick={handleWhatsAppOrder}
+                            >
+                              <MessageCircle className="h-4 w-4 mr-2" />
+                              Commander via WhatsApp
+                            </Button>
+                            <Button variant="outline" onClick={clearCart}>
+                              Vider le panier
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
               {activeTab === "commandes" && (
                 <>
                   {/* Current Orders */}
