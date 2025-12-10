@@ -47,6 +47,7 @@ import { ExportModule } from "@/components/dashboard/ExportModule";
 import { FinanceModule } from "@/components/dashboard/FinanceModule";
 import TraceabilityModule from "@/components/dashboard/TraceabilityModule";
 import { BusinessSection } from "@/components/dashboard/BusinessSection";
+import SellerReviews from "@/components/SellerReviews";
 
 const SENEGAL_REGIONS = [
   { value: "dakar", label: "Dakar" },
@@ -323,6 +324,7 @@ const SellerDashboard = () => {
     { id: "dashboard", label: "Tableau de bord", icon: BarChart3 },
     { id: "products", label: "Mes produits", icon: Package },
     { id: "orders", label: "Commandes", icon: ClipboardList },
+    { id: "reviews", label: "Avis clients", icon: Star },
     { id: "traceability", label: "Traçabilité", icon: QrCode },
     { id: "finance", label: "Financement", icon: TrendingUp },
     { id: "export", label: "Export International", icon: Globe },
