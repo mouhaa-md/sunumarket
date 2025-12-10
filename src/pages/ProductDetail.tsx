@@ -6,19 +6,25 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, MapPin, User, ArrowLeft, Package, Heart } from "lucide-react";
+import { ShieldCheck, MapPin, User, ArrowLeft, Package, Heart, ShoppingCart } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import NotFound from "./NotFound";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import ProductReviews from "@/components/ProductReviews";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const { user, userRole } = useAuth();
+  const { addToCart } = useCart();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const product = products.find((p) => p.id === id);
+  
+  // For database products, we need the seller_id
+  const sellerId = product?.id || "";
 
   useEffect(() => {
     if (user && userRole === "acheteur" && product) {
@@ -202,10 +208,12 @@ const ProductDetail = () => {
               <div className="flex gap-3">
                 <Button
                   size="lg"
-                  className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground"
-                  onClick={handleWhatsAppOrder}
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => addToCart(product.id, sellerId)}
                 >
-                  Commander via WhatsApp
+                  <ShoppingCart className="h-5 w-5 mr-2" />
+                  Ajouter au panier
                 </Button>
                 <Button
                   size="lg"
@@ -218,10 +226,23 @@ const ProductDetail = () => {
                 </Button>
               </div>
 
+              <Button
+                size="lg"
+                className="w-full bg-green-600 hover:bg-green-700"
+                onClick={handleWhatsAppOrder}
+              >
+                Commander via WhatsApp
+              </Button>
+
               <p className="text-xs text-center text-muted-foreground">
-                Vous serez redirigé vers WhatsApp pour finaliser votre commande
+                Ajoutez au panier ou commandez directement via WhatsApp
               </p>
             </div>
+          </div>
+
+          {/* Reviews Section */}
+          <div className="mt-8">
+            <ProductReviews productId={product.id} sellerId={sellerId} />
           </div>
 
           {/* Related Products */}

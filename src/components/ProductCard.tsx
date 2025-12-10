@@ -2,19 +2,23 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Heart } from "lucide-react";
+import { ShieldCheck, Heart, ShoppingCart, Star } from "lucide-react";
 import { Product } from "@/data/products";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 interface ProductCardProps {
   product: Product;
+  averageRating?: number;
+  reviewCount?: number;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, averageRating = 0, reviewCount = 0 }: ProductCardProps) => {
   const { user, userRole } = useAuth();
+  const { addToCart } = useCart();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -80,6 +84,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
       setIsLoading(false);
     }
   };
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // For static products, we use the product id as both product and seller id
+    addToCart(product.id, product.id);
+  };
 
   return (
     <Card className="group overflow-hidden border-2 border-secondary/20 hover:border-secondary/40 transition-all duration-300 hover:shadow-xl hover:shadow-secondary/20">
@@ -114,6 +124,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <h3 className="font-semibold text-lg mb-1 line-clamp-1">{product.name}</h3>
           <p className="text-sm text-muted-foreground line-clamp-1">{product.producer}</p>
         </div>
+
+        {/* Rating */}
+        {reviewCount > 0 && (
+          <div className="flex items-center gap-1 text-sm">
+            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <span className="font-medium">{averageRating.toFixed(1)}</span>
+            <span className="text-muted-foreground">({reviewCount})</span>
+          </div>
+        )}
         
         <div className="flex items-center justify-between">
           <div>
@@ -123,11 +142,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <p className="text-xl font-bold text-secondary">{product.price.toLocaleString()} FCFA</p>
         </div>
         
-        <Link to={`/produit/${product.id}`}>
-          <Button variant="secondary" className="w-full">
-            Voir détails
+        <div className="flex gap-2">
+          <Link to={`/produit/${product.id}`} className="flex-1">
+            <Button variant="outline" className="w-full" size="sm">
+              Voir détails
+            </Button>
+          </Link>
+          <Button 
+            variant="secondary" 
+            size="sm"
+            onClick={handleAddToCart}
+            className="flex-shrink-0"
+          >
+            <ShoppingCart className="h-4 w-4" />
           </Button>
-        </Link>
+        </div>
       </CardContent>
     </Card>
   );

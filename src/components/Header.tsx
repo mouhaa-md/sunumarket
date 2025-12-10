@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import AuthModal from "@/components/auth/AuthModal";
+import CartDrawer from "@/components/CartDrawer";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -89,6 +90,9 @@ const Header = () => {
               <button onClick={() => scrollToSection("team")} className="text-sm font-medium hover:text-secondary transition-colors">
                 Contact
               </button>
+
+              {/* Cart for buyers */}
+              <CartDrawer />
 
               {/* Auth Section */}
               {user ? (
